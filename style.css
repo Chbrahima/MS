@@ -1,0 +1,494 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #2196f3;
+    --primary-dark: #1976d2;
+    --secondary-color: #f50057;
+    --text-color: #2c3e50;
+    --background-light: #f8f9fa;
+    --success-color: #4caf50;
+    --success-dark: #388e3c;
+    --danger-color: #f44336;
+    --danger-dark: #d32f2f;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    color: var(--text-color);
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+header:hover {
+    transform: translateY(-5px);
+}
+
+header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 5px;
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+.student-info, .modules-container, .results-section {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.student-info:hover, .modules-container:hover, .results-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: var(--background-light);
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+    outline: none;
+}
+
+.module-entry {
+    background: linear-gradient(135deg, #ffffff 0%, var(--background-light) 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.module-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.module-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.subject-entry {
+    background-color: white;
+    padding: 15px 20px;
+    margin: 12px 0;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.subject-entry:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+}
+
+.summary {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 25px;
+    transition: transform 0.3s ease;
+}
+
+.summary:hover {
+    transform: translateY(-3px);
+}
+
+.summary p {
+    font-size: 18px;
+    margin: 12px 0;
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+#generatePDF {
+    background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%);
+    margin-top: 25px;
+}
+
+#generatePDF:hover {
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-dark) 100%);
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.delete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.module-average {
+    font-size: 20px;
+    color: var(--primary-color);
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    transition: transform 0.3s ease;
+}
+
+.module-average:hover {
+    transform: translateY(-3px);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 15px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+footer:hover {
+    transform: translateY(-5px);
+}
+
+footer p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+html {
+    font-size: 16px;
+}
+
+@media (max-width: 1200px) {
+    .container {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 1024px) {
+    html {
+        font-size: 15px;
+    }
+
+    .module-controls {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    header {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .subtitle {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .module-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .student-info, .modules-container, .results-section {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    .btn {
+        padding: 10px 20px;
+    }
+
+    .module-entry {
+        padding: 20px;
+    }
+
+    .subject-entry {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .subject-entry .delete-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    html {
+        font-size: 13px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .student-info, .modules-container, .results-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .module-entry {
+        padding: 15px;
+    }
+
+    input[type="text"], input[type="number"] {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .summary p {
+        font-size: 16px;
+    }
+
+    footer {
+        padding: 15px;
+        margin-top: 30px;
+    }
+
+    .module-average {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 375px) {
+    html {
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 8px;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .subtitle {
+        font-size: 1em;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    input[type="text"], input[type="number"] {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 320px) {
+    .container {
+        padding: 5px;
+    }
+
+    input[type="text"], input[type="number"] {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1300px;
+    }
+
+    html {
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    html {
+        font-size: 20px;
+    }
+}
+
+@media print {
+    .container {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+    }
+
+    .btn, .delete-btn {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .student-info, .modules-container, .results-section {
+        box-shadow: none;
+        margin-bottom: 20px;
+        break-inside: avoid;
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    input {
+        font-size: 16px !important;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .btn, .delete-btn {
+        min-height: 44px;
+    }
+
+    input[type="text"], input[type="number"] {
+        min-height: 44px;
+    }
+}
+
+@supports (padding: max(0px)) {
+    .container {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+}
