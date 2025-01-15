@@ -28,17 +28,16 @@
                     <!-- Modules will be added here dynamically -->
                 </div>
                 <button id="addModule" class="btn">Ajouter un Module</button>
+                <button id="calculateAll" class="btn btn-primary">Calculer les Notes</button>
+                <button id="generatePDF" class="btn btn-secondary">Générer PDF</button>
             </div>
 
-            <div class="results-section">
+            <div class="results-summary" id="resultsSummary" style="display: none;">
                 <h2>Résumé des Résultats</h2>
-                <div id="resultsDisplay">
-                    <div class="summary">
-                        <p>Moyenne Générale: <span id="overallAverage">-</span></p>
-                        <p>Nombre de Modules: <span id="totalModules">0</span></p>
-                    </div>
+                <div class="overall-average">
+                    <span>Moyenne Générale: </span>
+                    <span id="overallAverage">-</span>
                 </div>
-                <button id="generatePDF" class="btn">Générer le Relevé de Notes (PDF)</button>
             </div>
         </main>
 
