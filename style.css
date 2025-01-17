@@ -645,7 +645,7 @@ input.error:focus {
 
 @media screen and (max-width: 480px) {
     .container {
-        padding: 10px;
+        padding: 8px;
     }
 
     header {
@@ -699,4 +699,140 @@ input.error:focus {
     text-align: center;
     width: 100%;
     box-sizing: border-box;
+}
+
+.subject {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subject-inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subject-inputs input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: var(--background-light);
+}
+
+.delete-subject {
+    width: 36px;
+    height: 36px;
+    margin-top: 8px;
+    align-self: flex-end;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.module-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.module-name {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: var(--background-light);
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+
+    .subject {
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .subject-inputs {
+        gap: 6px;
+    }
+
+    .subject-inputs input {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .btn {
+        height: 36px;
+        padding: 6px 12px;
+        font-size: 14px;
+        margin: 4px 0;
+    }
+
+    .delete-subject {
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+    }
+
+    .module-name {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    .input-group input {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    h1 {
+        font-size: 1.4em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+    }
+}
+
+/* Ensure proper spacing between modules */
+.module-entry {
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+/* Fix input placeholder text color */
+input::placeholder {
+    color: #999;
+    opacity: 1;
 }
