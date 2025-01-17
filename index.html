@@ -2,49 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS - Système de Gestion des Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Système de Gestion des Notes LMD - Calculez vos moyennes facilement">
+    <meta name="theme-color" content="#2196F3">
+    <title>Calculateur de Moyenne LMD</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>MS</h1>
-            <p class="subtitle">Système de Gestion des Notes</p>
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> MS</h1>
+                <p class="subtitle">Système de Gestion des Notes</p>
+            </div>
+            <button id="darkModeToggle" class="theme-toggle" aria-label="Basculer le mode sombre">
+                <i class="fas fa-moon"></i>
+            </button>
         </header>
         
         <main>
             <div class="student-info">
-                <h2>Information de l'Étudiant</h2>
-                <input type="text" id="studentName" placeholder="Nom de l'étudiant">
-                <input type="text" id="studentId" placeholder="Numéro d'inscription">
+                <h2><i class="fas fa-user-graduate"></i> Information de l'Étudiant</h2>
+                <div class="input-group">
+                    <label for="studentName">Nom et Prénom:</label>
+                    <input type="text" id="studentName" placeholder="Entrez le nom de l'étudiant" autocomplete="name">
+                </div>
+                <div class="input-group">
+                    <label for="studentId">Numéro d'Inscription:</label>
+                    <input type="text" id="studentId" placeholder="Entrez le numéro d'inscription">
+                </div>
             </div>
 
             <div class="modules-container">
-                <h2>Modules</h2>
                 <div id="modulesSection">
                     <!-- Modules will be added here dynamically -->
                 </div>
-                <button id="addModule" class="btn">Ajouter un Module</button>
-                <button id="calculateAll" class="btn btn-primary">Calculer les Notes</button>
-                <button id="generatePDF" class="btn btn-secondary">Générer PDF</button>
+                <button id="addModule" class="btn" aria-label="Ajouter un module">
+                    <i class="fas fa-plus"></i> Ajouter un Module
+                </button>
+                <button id="calculateAll" class="btn btn-primary" aria-label="Calculer toutes les notes">
+                    <i class="fas fa-calculator"></i> Calculer les Notes
+                </button>
+                <button id="generatePDF" class="btn btn-secondary" aria-label="Générer le PDF">
+                    <i class="fas fa-file-pdf"></i> Générer PDF
+                </button>
             </div>
 
             <div class="results-summary" id="resultsSummary" style="display: none;">
-                <h2>Résumé des Résultats</h2>
-                <div class="overall-average">
-                    <span>Moyenne Générale: </span>
-                    <span id="overallAverage">-</span>
-                </div>
+                <!-- Results will be displayed here -->
             </div>
         </main>
 
         <footer>
+            <p><i class="far fa-copyright"></i> 2024 Système de Gestion des Notes LMD</p>
             <p>Développé par CHEIKH BRAHIM (MS)</p>
         </footer>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
