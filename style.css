@@ -1,50 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 :root {
-    --primary-color: #2196f3;
-    --primary-dark: #1976d2;
-    --secondary-color: #f50057;
-    --text-color: #2c3e50;
+    --primary-color: #2196F3;
+    --primary-dark: #1976D2;
+    --success-color: #4CAF50;
+    --success-dark: #388E3C;
     --background-light: #f8f9fa;
-    --success-color: #4caf50;
-    --success-dark: #388e3c;
-    --danger-color: #f44336;
-    --danger-dark: #d32f2f;
+    --text-color: #333;
+    --background-color: #f4f4f4;
+    --card-background: white;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --primary-color: #64B5F6;
+    --primary-dark: #42A5F5;
+    --success-color: #81C784;
+    --success-dark: #66BB6A;
+    --background-light: #2c2c2c;
+    --text-color: #e0e0e0;
+    --background-color: #1a1a1a;
+    --card-background: #2c2c2c;
+    --border-color: #404040;
+    --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-overflow-scrolling: touch;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
     color: var(--text-color);
-    min-height: 100vh;
+    background-color: var(--background-color);
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
-    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main {
+    margin-top: 20px;
+}
+
+.modules-container {
+    margin-top: 20px;
     overflow-x: hidden;
 }
 
 header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: white;
+    box-shadow: 0 2px 4px var(--shadow-color);
     padding: 30px;
     text-align: center;
     border-radius: 15px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px var(--shadow-color);
     transform: translateY(0);
+    transition: transform 0.3s ease, background 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    flex: 1;
+    text-align: center;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 1.2em;
     transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
 }
 
 header:hover {
@@ -86,34 +130,35 @@ h2::after {
 }
 
 .student-info, .modules-container, .results-section {
-    background-color: white;
+    background-color: var(--card-background);
     padding: 25px;
     border-radius: 15px;
     margin-bottom: 25px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
 }
 
 .student-info:hover, .modules-container:hover, .results-section:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 25px var(--shadow-color);
 }
 
 input[type="text"], input[type="number"] {
     width: 100%;
-    padding: 12px 15px;
-    margin: 8px 0;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 16px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
     transition: all 0.3s ease;
     background-color: var(--background-light);
+    color: var(--text-color);
 }
 
 input[type="text"]:focus, input[type="number"]:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
     outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
 }
 
 .module-entry {
@@ -127,7 +172,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 
 .module-entry:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 .module-controls {
@@ -137,56 +182,108 @@ input[type="text"]:focus, input[type="number"]:focus {
     margin: 20px 0;
 }
 
-.subject-entry {
-    background-color: white;
-    padding: 15px 20px;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
+.subject {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
-.subject-entry:hover {
-    transform: translateX(5px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+.subject:hover {
+    background-color: var(--background-light);
 }
 
-.subject-status,
-.module-status {
-    display: inline-block;
+.subject-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    align-items: center;
+    width: 100%;
+}
+
+.subject-inputs input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: var(--background-light);
+    color: var(--text-color);
+}
+
+.subject-inputs input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.subject-result {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    min-width: 200px;
+}
+
+.subject-average,
+.subject-status {
     padding: 4px 8px;
     border-radius: 4px;
-    margin-left: 10px;
     font-weight: 500;
-    font-size: 0.9em;
 }
 
-.success {
+.subject-status.success {
     background-color: #e8f5e9;
     color: #2e7d32;
 }
 
-.failure {
+.subject-status.failure {
     background-color: #ffebee;
     color: #c62828;
+}
+
+.module-result {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--background-light);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.module-status.success {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+.module-status.failure {
+    color: #c62828;
+    font-weight: 500;
 }
 
 .subject {
     margin: 15px 0;
     padding: 15px;
-    background-color: #fff;
+    background-color: var(--card-background);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    border: 1px solid var(--border-color);
 }
 
 .subject input {
     margin-right: 10px;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
+    background-color: var(--background-light);
+    color: var(--text-color);
 }
 
 .subject-result {
@@ -203,7 +300,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 .module-result {
     margin-top: 15px;
     padding: 10px;
-    background-color: #f8f9fa;
+    background-color: var(--background-light);
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -245,7 +342,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
 .btn-primary {
@@ -283,36 +380,45 @@ input[type="text"]:focus, input[type="number"]:focus {
 }
 
 #generatePDF:hover {
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
-.delete-btn {
-    background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-dark) 100%);
-    color: white;
-    padding: 8px 20px;
-    border: none;
-    border-radius: 6px;
+.delete-module,
+.delete-subject {
+    color: #e74c3c;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 1.2em;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    padding: 5px;
+    margin-left: 10px;
 }
 
-.delete-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+.delete-module:hover,
+.delete-subject:hover {
+    color: #c0392b;
+    transform: scale(1.1);
 }
 
-.compensation-status {
-    margin-top: 8px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 0.9em;
-    background-color: #f5f5f5;
-    display: inline-block;
+.module-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.subject {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.subject:hover {
+    background-color: var(--background-light);
 }
 
 .modules-container {
@@ -326,7 +432,7 @@ input[type="text"]:focus, input[type="number"]:focus {
 .results-summary {
     margin-top: 20px;
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: var(--background-light);
     border-radius: 8px;
     text-align: center;
 }
@@ -346,7 +452,7 @@ footer {
     color: white;
     font-weight: 500;
     letter-spacing: 1px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px var(--shadow-color);
     transform: translateY(0);
     transition: transform 0.3s ease;
 }
@@ -364,252 +470,210 @@ html {
     font-size: 16px;
 }
 
-.module-header {
-    margin-bottom: 20px;
-}
-
 .module-name {
-    font-size: 1.2em;
-    padding: 8px 15px;
-    border: 1px solid #ddd;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    width: 300px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: var(--background-light);
+    color: var(--text-color);
     margin-bottom: 10px;
-    text-align: center;
-    font-weight: 500;
 }
 
 .module-name:focus {
-    border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
 }
 
-@media (max-width: 1200px) {
-    .container {
-        max-width: 95%;
-    }
+.input-group {
+    margin-bottom: 15px;
 }
 
-@media (max-width: 1024px) {
-    html {
-        font-size: 15px;
-    }
-
-    .module-controls {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-    }
-
-    header {
-        padding: 25px;
-    }
-
-    h1 {
-        font-size: 2.2em;
-    }
-
-    .subtitle {
-        font-size: 1.1em;
-    }
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: 500;
 }
 
-@media (max-width: 768px) {
-    html {
-        font-size: 14px;
-    }
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+}
 
-    .container {
-        padding: 15px;
-    }
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
 
-    .module-controls {
-        grid-template-columns: 1fr;
-    }
+.error-message {
+    color: #e74c3c;
+    font-size: 0.8em;
+    min-height: 1em;
+}
 
-    .student-info, .modules-container, .results-section {
-        padding: 20px;
-    }
+input.error {
+    border-color: #e74c3c;
+    background-color: #fff6f6;
+}
 
-    h1 {
-        font-size: 2em;
-    }
+input.error:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
 
-    h2 {
-        font-size: 1.4em;
-    }
+.student-info input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: var(--background-light);
+    color: var(--text-color);
+}
 
-    .btn {
-        padding: 10px 20px;
-    }
+.student-info input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
 
-    .module-entry {
-        padding: 20px;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    .subject-entry {
-        flex-direction: column;
-        text-align: center;
+@media screen and (min-width: 769px) {
+    .subject-inputs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
         gap: 10px;
     }
 
-    .subject-entry .delete-btn {
-        width: 100%;
-        margin-top: 10px;
-    }
-}
-
-@media (max-width: 576px) {
-    html {
-        font-size: 13px;
-    }
-
-    .container {
+    .subject {
+        flex-direction: row;
+        align-items: center;
         padding: 10px;
     }
 
-    header {
-        padding: 20px;
-        margin-bottom: 20px;
+    .delete-subject {
+        margin-top: 0;
     }
 
-    .student-info, .modules-container, .results-section {
-        padding: 15px;
-        margin-bottom: 15px;
+    .module-header {
+        flex-direction: row;
+        align-items: center;
     }
 
-    .module-entry {
-        padding: 15px;
-    }
-
-    input[type="text"], input[type="number"] {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .summary p {
-        font-size: 16px;
-    }
-
-    footer {
-        padding: 15px;
-        margin-top: 30px;
-    }
-
-    .module-average {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 375px) {
-    html {
-        font-size: 12px;
-    }
-
-    .container {
-        padding: 8px;
-    }
-
-    header {
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 1.8em;
-    }
-
-    .subtitle {
-        font-size: 1em;
+    .module-name {
+        width: auto;
+        flex: 1;
     }
 
     .btn {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    input[type="text"], input[type="number"] {
-        padding: 8px;
-        font-size: 13px;
+        width: auto;
+        margin: 0 5px;
     }
 }
 
-@media (max-width: 320px) {
-    .container {
-        padding: 5px;
-    }
-
-    input[type="text"], input[type="number"] {
-        padding: 6px;
-        font-size: 12px;
-    }
-
-    .btn {
-        padding: 6px 12px;
-        font-size: 13px;
-    }
-}
-
-@media (min-width: 1400px) {
-    .container {
-        max-width: 1300px;
-    }
-
-    html {
-        font-size: 18px;
-    }
-}
-
-@media (min-width: 1600px) {
-    .container {
-        max-width: 1400px;
-    }
-
-    html {
-        font-size: 20px;
-    }
-}
-
-@media print {
-    .container {
-        width: 100%;
-        max-width: none;
-        padding: 0;
-    }
-
-    .btn, .delete-btn {
-        display: none;
-    }
-
-    body {
-        background: white;
-    }
-
-    .student-info, .modules-container, .results-section {
-        box-shadow: none;
-        margin-bottom: 20px;
-        break-inside: avoid;
-    }
-}
-
-@supports (-webkit-touch-callout: none) {
-    input {
-        font-size: 16px !important;
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .subject-inputs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 }
 
 @media (hover: none) and (pointer: coarse) {
-    .btn, .delete-btn {
+    input, button, .btn {
         min-height: 44px;
+        font-size: 16px;
     }
 
-    input[type="text"], input[type="number"] {
+    .subject-inputs input {
+        padding: 12px;
+    }
+
+    .subject {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .delete-subject,
+    .delete-module {
+        padding: 10px;
+        min-width: 44px;
         min-height: 44px;
     }
 }
 
-@supports (padding: max(0px)) {
+@media screen and (max-width: 480px) {
     .container {
-        padding-left: max(20px, env(safe-area-inset-left));
-        padding-right: max(20px, env(safe-area-inset-right));
+        padding: 10px;
     }
+
+    header {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+    }
+
+    .student-info,
+    .modules-container,
+    .module-entry {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+}
+
+.modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modules-container .btn {
+    margin: 5px 0;
+}
+
+.module-result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    text-align: center;
 }
