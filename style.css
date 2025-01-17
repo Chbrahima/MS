@@ -615,84 +615,40 @@ input.error:focus {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media screen and (min-width: 768px) {
+/* Mobile styles - keeping it simple */
+@media screen and (max-width: 768px) {
+    .subject-inputs {
+        display: block;
+        width: 100%;
+    }
+    
+    .subject-inputs input,
+    .module-name,
+    .student-info input {
+        display: block;
+        width: 100%;
+        height: 35px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .subject {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .delete-subject {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 769px) {
     .subject-inputs {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 10px;
-    }
-}
-
-@media screen and (min-width: 481px) and (max-width: 768px) {
-    .subject-inputs {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-}
-
-@media (hover: none) and (pointer: coarse) {
-    input, 
-    button, 
-    .btn, 
-    .delete-subject {
-        min-height: 44px;
-        font-size: 16px;
-    }
-
-    .subject-inputs input {
-        padding: 12px;
-    }
-
-    .subject {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-
-    .input-group {
-        margin-bottom: 15px;
-    }
-
-    .delete-subject,
-    .delete-module {
-        padding: 10px;
-        min-width: 44px;
-        min-height: 44px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .container {
-        padding: 8px;
-    }
-
-    header {
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-
-    h1 {
-        font-size: 1.5em;
-    }
-
-    h2 {
-        font-size: 1.2em;
-    }
-
-    .subtitle {
-        font-size: 0.9em;
-    }
-
-    .student-info,
-    .modules-container,
-    .module-entry {
-        margin-bottom: 20px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: 500;
     }
 }
 
@@ -806,7 +762,6 @@ input.error:focus {
     .delete-subject {
         width: 32px;
         height: 32px;
-        padding: 6px;
     }
 
     .module-name {
