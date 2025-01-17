@@ -37,12 +37,14 @@ body {
     background-color: var(--background-color);
     padding: 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px;
+    padding: 10px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -192,6 +194,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     border: 1px solid var(--border-color);
     border-radius: 4px;
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .subject:hover {
@@ -209,13 +213,12 @@ input[type="text"]:focus, input[type="number"]:focus {
 
 .subject-inputs input {
     width: 100%;
-    padding: 12px;
+    height: 44px;
+    padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 16px;
-    transition: all 0.3s ease;
-    background-color: var(--background-light);
-    color: var(--text-color);
+    box-sizing: border-box;
 }
 
 .subject-inputs input:focus {
@@ -256,6 +259,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .module-status.success {
@@ -275,6 +280,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--shadow-color);
     border: 1px solid var(--border-color);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .subject input {
@@ -306,6 +313,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     align-items: center;
     gap: 15px;
     justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .module-average {
@@ -338,6 +347,7 @@ input[type="text"]:focus, input[type="number"]:focus {
     width: 100%;
     text-transform: uppercase;
     letter-spacing: 1px;
+    height: 44px;
 }
 
 .btn:hover {
@@ -391,6 +401,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     transition: all 0.3s ease;
     padding: 5px;
     margin-left: 10px;
+    width: 44px;
+    height: 44px;
 }
 
 .delete-module:hover,
@@ -404,6 +416,7 @@ input[type="text"]:focus, input[type="number"]:focus {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
+    width: 100%;
 }
 
 .subject {
@@ -415,6 +428,8 @@ input[type="text"]:focus, input[type="number"]:focus {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .subject:hover {
@@ -480,6 +495,7 @@ html {
     background-color: var(--background-light);
     color: var(--text-color);
     margin-bottom: 10px;
+    height: 44px;
 }
 
 .module-name:focus {
@@ -508,6 +524,7 @@ html {
     background-color: var(--background-light);
     color: var(--text-color);
     transition: border-color 0.3s ease;
+    height: 44px;
 }
 
 .input-group input:focus {
@@ -541,6 +558,7 @@ input.error:focus {
     transition: all 0.3s ease;
     background-color: var(--background-light);
     color: var(--text-color);
+    height: 44px;
 }
 
 .student-info input:focus {
@@ -596,7 +614,10 @@ input.error:focus {
 }
 
 @media (hover: none) and (pointer: coarse) {
-    input, button, .btn {
+    input, 
+    button, 
+    .btn, 
+    .delete-subject {
         min-height: 44px;
         font-size: 16px;
     }
@@ -676,4 +697,6 @@ input.error:focus {
     background-color: var(--background-light);
     border-radius: 8px;
     text-align: center;
+    width: 100%;
+    box-sizing: border-box;
 }
