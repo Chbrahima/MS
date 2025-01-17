@@ -536,6 +536,12 @@ class AcademicManager {
 
             // For each module
             this.modules.forEach((module, index) => {
+                // Check if we need a new page
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+
                 // Module header
                 doc.setFillColor(33, 150, 243);
                 doc.rect(margin, y - 5, 170, 10, 'F');
@@ -549,57 +555,79 @@ class AcademicManager {
                 const colWidths = [60, 20, 20, 20, 25, 25];
                 let x = margin;
 
+                // Draw header background
+                doc.setFillColor(240, 240, 240);
+                doc.rect(margin, y - 5, 170, 8, 'F');
+
+                // Draw headers
                 headers.forEach((header, i) => {
-                    doc.text(header, x, y);
+                    doc.text(header, x + 2, y + 2);
                     x += colWidths[i];
                 });
                 y += 10;
 
-                // Subjects
-                module.subjects.forEach(subject => {
+                // Draw subjects
+                module.subjects.forEach((subject, idx) => {
+                    // Alternate row background
+                    if (idx % 2 === 0) {
+                        doc.setFillColor(249, 249, 249);
+                        doc.rect(margin, y - 5, 170, 8, 'F');
+                    }
+
                     x = margin;
                     const average = (subject.exam * 0.6 + subject.devoir * 0.4).toFixed(2);
                     const status = average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
                     
-                    const values = [
+                    // Draw each cell
+                    [
                         subject.name,
                         subject.exam.toString(),
                         subject.devoir.toString(),
                         subject.coefficient.toString(),
-                        average,
+                        average.toString(),
                         status
-                    ];
-
-                    values.forEach((value, i) => {
+                    ].forEach((value, i) => {
+                        // Set color for status
                         if (i === 5) {
-                            doc.setTextColor(average >= 10 ? 0 : 255, 0, 0);
+                            if (average >= 10) {
+                                doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
+                            } else {
+                                doc.setTextColor(198, 40, 40);  // Red for RATTRAPAGE
+                            }
                         }
-                        doc.text(value, x, y);
-                        doc.setTextColor(0, 0, 0);
+                        doc.text(value, x + 2, y + 2);
+                        if (i === 5) {
+                            doc.setTextColor(0, 0, 0);  // Reset to black
+                        }
                         x += colWidths[i];
                     });
                     y += 8;
                 });
 
                 // Module average
-                const moduleAverage = module.calculateAverage();
                 y += 5;
-                doc.text(`Moyenne du Module: ${moduleAverage.toFixed(2)}`, margin, y);
-                doc.setTextColor(moduleAverage >= 10 ? 0 : 255, 0, 0);
-                doc.text(moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ', 120, y);
-                doc.setTextColor(0, 0, 0);
-                y += 20;
+                const moduleAverage = module.calculateAverage().toFixed(2);
+                const moduleStatus = moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
 
-                // Add new page if needed
-                if (y > 250 && index < this.modules.length - 1) {
-                    doc.addPage();
-                    y = 20;
+                // Draw average background
+                doc.setFillColor(240, 240, 240);
+                doc.rect(margin, y - 5, 170, 8, 'F');
+
+                // Draw average and status
+                doc.text(`Moyenne du Module: ${moduleAverage}`, margin + 2, y + 2);
+                if (parseFloat(moduleAverage) >= 10) {
+                    doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
+                } else {
+                    doc.setTextColor(198, 40, 40);  // Red for RATTRAPAGE
                 }
+                doc.text(moduleStatus, margin + 100, y + 2);
+                doc.setTextColor(0, 0, 0);  // Reset to black
+
+                y += 20;
             });
 
             // Save the PDF
             doc.save('releve_notes.pdf');
-
         } catch (error) {
             console.error('Error generating PDF:', error);
             alert('Une erreur est survenue lors de la génération du PDF');
