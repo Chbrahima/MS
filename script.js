@@ -85,6 +85,7 @@ class AcademicManager {
         document.getElementById('addModule').addEventListener('click', () => this.addModule());
         document.getElementById('calculateAll').addEventListener('click', () => this.calculateAllModules());
         document.getElementById('generatePDF').addEventListener('click', () => this.generatePDF());
+        document.getElementById('darkModeToggle').addEventListener('click', () => this.toggleDarkMode());
     }
 
     addModule() {
@@ -463,7 +464,7 @@ class AcademicManager {
                 // Calculate subject average
                 const subjectAverage = (exam * 0.6 + devoir * 0.4);
                 const status = subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
-
+                
                 // Update subject display
                 const resultDiv = subjectElement.querySelector('.subject-result');
                 resultDiv.innerHTML = `
@@ -508,165 +509,100 @@ class AcademicManager {
 
     generatePDF() {
         try {
-            // Initialize jsPDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+            const margin = 20;
+            let y = 20;
+
+            // Add header
+            doc.setFontSize(18);
+            doc.text('Relevé de Notes', 105, y, { align: 'center' });
+            y += 20;
+
+            // Add student info
+            const studentName = document.getElementById('studentName').value;
+            const studentId = document.getElementById('studentId').value;
             
-            // Colors
-            const primaryColor = [33, 150, 243];  // Blue
-            const secondaryColor = [76, 175, 80]; // Green
-            const headerBg = [235, 245, 255];     // Light Blue
-            const textColor = [51, 51, 51];       // Dark Gray
-            
-            // Set font
-            doc.setFont("helvetica");
-            
-            // Add header with background
-            doc.setFillColor(...headerBg);
-            doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
-            
-            // Title
-            doc.setTextColor(...primaryColor);
-            doc.setFontSize(24);
-            doc.text("Relevé de Notes", 105, 25, { align: "center" });
-            
-            // Reset text color
-            doc.setTextColor(...textColor);
-            
-            // Add student information
             doc.setFontSize(12);
-            const studentName = document.getElementById('studentName').value || 'Non spécifié';
-            const studentId = document.getElementById('studentId').value || 'Non spécifié';
-            
-            // Student info box
-            doc.setDrawColor(...primaryColor);
-            doc.setFillColor(245, 245, 245);
-            doc.roundedRect(20, 45, 170, 25, 3, 3, 'FD');
-            doc.text(`Nom et Prénom: ${studentName}`, 25, 55);
-            doc.text(`Numéro d'Inscription: ${studentId}`, 25, 65);
-            
-            let yPos = 90;
-            
-            // Add modules and their subjects
-            this.modules.forEach((module, moduleIndex) => {
-                // Check if we need a new page
-                if (yPos > 250) {
-                    doc.addPage();
-                    yPos = 20;
-                }
-                
-                // Module header
-                doc.setFillColor(...primaryColor);
-                doc.setTextColor(255, 255, 255);
-                doc.roundedRect(20, yPos - 5, 170, 10, 2, 2, 'F');
-                doc.setFontSize(12);
-                doc.text(`Module ${moduleIndex + 1}: ${module.name}`, 25, yPos);
-                yPos += 15;
-                
-                // Table header
-                doc.setFillColor(...headerBg);
-                doc.setTextColor(...textColor);
-                doc.rect(20, yPos - 5, 170, 8, 'F');
-                
-                // Column headers with specific widths
-                const columns = [
-                    { text: "Matière", x: 22, width: 60 },
-                    { text: "Examen", x: 85, width: 25 },
-                    { text: "TD", x: 112, width: 25 },
-                    { text: "Coef", x: 139, width: 20 },
-                    { text: "Moyenne", x: 161, width: 27 }
-                ];
-                
-                doc.setFontSize(10);
-                columns.forEach(col => {
-                    doc.text(col.text, col.x, yPos);
-                });
-                yPos += 8;
-                
-                // Draw table grid
-                doc.setDrawColor(200, 200, 200);
-                
-                // Subjects
-                module.subjects.forEach((subject, index) => {
-                    // Check for new page
-                    if (yPos > 250) {
-                        doc.addPage();
-                        yPos = 20;
-                    }
-                    
-                    // Alternate row background
-                    if (index % 2 === 0) {
-                        doc.setFillColor(250, 250, 250);
-                        doc.rect(20, yPos - 5, 170, 8, 'F');
-                    }
-                    
-                    // Draw cell borders
-                    doc.line(20, yPos - 5, 20, yPos + 3);  // Left border
-                    doc.line(190, yPos - 5, 190, yPos + 3); // Right border
-                    columns.forEach(col => {
-                        doc.line(col.x + col.width, yPos - 5, col.x + col.width, yPos + 3);
-                    });
-                    
-                    // Subject data
-                    doc.text(subject.name.substring(0, 25), 22, yPos);
-                    doc.text(subject.exam.toString(), 85, yPos);
-                    doc.text(subject.devoir.toString(), 112, yPos);
-                    doc.text(subject.coefficient.toString(), 139, yPos);
-                    
-                    // Color code the average based on passing grade (10)
-                    const average = subject.average.toFixed(2);
-                    if (average >= 10) {
-                        doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-                    } else {
-                        doc.setTextColor(231, 76, 60);
-                    }
-                    doc.text(average.toString(), 161, yPos);
-                    doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-                    
-                    yPos += 8;
-                });
-                
-                // Module average
-                doc.setFillColor(245, 245, 245);
-                doc.rect(20, yPos - 5, 170, 10, 'F');
-                doc.setFontSize(11);
-                const moduleAverage = module.calculateAverage().toFixed(2);
-                doc.setTextColor(...primaryColor);
-                doc.text(`Moyenne du Module: ${moduleAverage}`, 25, yPos + 2);
-                doc.setTextColor(...textColor);
-                yPos += 20;
-            });
-            
-            // Add overall average if there are modules
-            if (this.modules.length > 0) {
-                const overallAverage = this.calculateOverallAverage();
-                
-                // Overall average box
-                doc.setFillColor(...headerBg);
-                doc.roundedRect(40, yPos - 5, 130, 15, 3, 3, 'F');
-                doc.setFontSize(14);
-                doc.setTextColor(...primaryColor);
-                doc.text(`Moyenne Générale: ${overallAverage.toFixed(2)}`, 105, yPos + 5, { align: "center" });
+            if (studentName) {
+                doc.text(`Nom et Prénom: ${studentName}`, margin, y);
+                y += 10;
             }
-            
-            // Add footer
-            const pageHeight = doc.internal.pageSize.height;
-            doc.setFillColor(245, 245, 245);
-            doc.rect(0, pageHeight - 20, doc.internal.pageSize.width, 20, 'F');
-            
-            const today = new Date();
-            const dateStr = today.toLocaleDateString();
-            doc.setFontSize(10);
-            doc.setTextColor(...textColor);
-            doc.text(`Généré le ${dateStr}`, 105, pageHeight - 12, { align: "center" });
-            doc.text("Développé par CHEIKH BRAHIM (MS)", 105, pageHeight - 5, { align: "center" });
-            
+            if (studentId) {
+                doc.text(`N° d'Inscription: ${studentId}`, margin, y);
+                y += 10;
+            }
+            y += 10;
+
+            // For each module
+            this.modules.forEach((module, index) => {
+                // Module header
+                doc.setFillColor(33, 150, 243);
+                doc.rect(margin, y - 5, 170, 10, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.text(`Module: ${module.name}`, margin + 5, y + 3);
+                doc.setTextColor(0, 0, 0);
+                y += 15;
+
+                // Table headers
+                const headers = ['Matière', 'Examen', 'Devoir', 'Coef', 'Moyenne', 'Status'];
+                const colWidths = [60, 20, 20, 20, 25, 25];
+                let x = margin;
+
+                headers.forEach((header, i) => {
+                    doc.text(header, x, y);
+                    x += colWidths[i];
+                });
+                y += 10;
+
+                // Subjects
+                module.subjects.forEach(subject => {
+                    x = margin;
+                    const average = (subject.exam * 0.6 + subject.devoir * 0.4).toFixed(2);
+                    const status = average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+                    
+                    const values = [
+                        subject.name,
+                        subject.exam.toString(),
+                        subject.devoir.toString(),
+                        subject.coefficient.toString(),
+                        average,
+                        status
+                    ];
+
+                    values.forEach((value, i) => {
+                        if (i === 5) {
+                            doc.setTextColor(average >= 10 ? 0 : 255, 0, 0);
+                        }
+                        doc.text(value, x, y);
+                        doc.setTextColor(0, 0, 0);
+                        x += colWidths[i];
+                    });
+                    y += 8;
+                });
+
+                // Module average
+                const moduleAverage = module.calculateAverage();
+                y += 5;
+                doc.text(`Moyenne du Module: ${moduleAverage.toFixed(2)}`, margin, y);
+                doc.setTextColor(moduleAverage >= 10 ? 0 : 255, 0, 0);
+                doc.text(moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ', 120, y);
+                doc.setTextColor(0, 0, 0);
+                y += 20;
+
+                // Add new page if needed
+                if (y > 250 && index < this.modules.length - 1) {
+                    doc.addPage();
+                    y = 20;
+                }
+            });
+
             // Save the PDF
-            doc.save("releve_notes.pdf");
-            
+            doc.save('releve_notes.pdf');
+
         } catch (error) {
-            console.error("Erreur lors de la génération du PDF:", error);
-            alert("Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.");
+            console.error('Error generating PDF:', error);
+            alert('Une erreur est survenue lors de la génération du PDF');
         }
     }
 
