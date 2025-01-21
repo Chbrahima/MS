@@ -731,3 +731,45 @@ input::placeholder {
         gap: 10px;
     }
 }
+
+.rattrapage-info {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #fff3e0;
+    border-left: 3px solid #ff9800;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #e65100;
+}
+
+.rattrapage-info strong {
+    color: #f57c00;
+    font-weight: 600;
+}
+
+.subject-result {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+}
+
+.subject-average,
+.subject-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.subject-average.success,
+.subject-status.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.subject-average.failure,
+.subject-status.failure {
+    background-color: #ffebee;
+    color: #c62828;
+}
