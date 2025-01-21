@@ -474,28 +474,64 @@ class AcademicManager {
                 
                 // Calculate subject average
                 const subjectAverage = (exam * 0.6 + devoir * 0.4);
-                const status = subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
                 
-                // Update subject display
-                this.updateSubjectDisplay(subjectElement, exam, devoir, coefficient);
+                const resultDiv = subjectElement.querySelector('.subject-result');
+                if (resultDiv) {
+                    resultDiv.innerHTML = `
+                        <div class="subject-status ${subjectAverage >= 10 ? 'success' : 'failure'}">
+                            Moyenne: ${subjectAverage.toFixed(2)}/20
+                        </div>
+                    `;
+                }
 
-                // Add to module total
+                // Add subject data to module
+                const subject = new Subject(
+                    name,
+                    exam,
+                    devoir,
+                    coefficient
+                );
+                module.addSubject(subject);
+
+                // Update total weighted score and coefficients
                 totalWeightedScore += subjectAverage * coefficient;
                 totalCoefficients += coefficient;
-
-                // Store subject data
-                const subject = new Subject(name, exam, devoir, coefficient);
-                module.addSubject(subject);
             });
 
             // Calculate and display module average
             const moduleAverage = totalWeightedScore / totalCoefficients;
             const moduleStatus = moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
+            const isModulePassed = moduleAverage >= 10;
+
+            // Update all subject statuses based on their individual averages
+            moduleInfo.subjects.forEach(subjectInfo => {
+                const subjectElement = subjectInfo.element;
+                if (subjectElement) {
+                    const subjectAverage = (subjectInfo.data.exam * 0.6 + subjectInfo.data.devoir * 0.4);
+                    
+                    // If module is passed, all subjects are VALIDÉ (compensated)
+                    // If module is not passed, only subjects with average >= 10 are VALIDÉ
+                    const status = isModulePassed || subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+                    
+                    const resultDiv = subjectElement.querySelector('.subject-result');
+                    if (resultDiv) {
+                        resultDiv.innerHTML = `
+                            <div class="subject-status ${status === 'VALIDÉ' ? 'success' : 'failure'}">
+                                ${status}: ${subjectAverage.toFixed(2)}
+                            </div>
+                        `;
+                    }
+                }
+            });
 
             const moduleResult = moduleInfo.element.querySelector('.module-result');
             moduleResult.innerHTML = `
-                <div class="module-average">${moduleAverage.toFixed(2)}/20</div>
-                <div class="module-status ${moduleStatus === 'MODULE VALIDÉ' ? 'success' : 'failure'}">${moduleStatus}</div>
+                <div class="module-average ${moduleAverage >= 10 ? 'success' : 'failure'}">
+                    Moyenne: ${moduleAverage.toFixed(2)}
+                </div>
+                <div class="module-status ${moduleAverage >= 10 ? 'success' : 'failure'}">
+                    ${moduleStatus}
+                </div>
             `;
 
             // Store module data
@@ -529,28 +565,15 @@ class AcademicManager {
         if (subjectElement) {
             // Calculate subject average
             const subjectAverage = (exam * 0.6 + devoir * 0.4);
-            const status = subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
             
-            // Calculate needed rattrapage grade if failed
-            let rattrapageInfo = '';
-            if (status === 'RATTRAPAGE') {
-                const neededGrade = this.calculateRattrapageNeeded(exam, devoir);
-                rattrapageInfo = `<div class="rattrapage-info">
-                    Note nécessaire en rattrapage: <strong>${neededGrade}</strong>
-                </div>`;
-            }
-
-            // Update subject display
             const resultDiv = subjectElement.querySelector('.subject-result');
-            resultDiv.innerHTML = `
-                <div class="subject-average ${status === 'VALIDÉ' ? 'success' : 'failure'}">
-                    Moyenne: ${subjectAverage.toFixed(2)}
-                </div>
-                <div class="subject-status ${status === 'VALIDÉ' ? 'success' : 'failure'}">
-                    ${status}
-                </div>
-                ${rattrapageInfo}
-            `;
+            if (resultDiv) {
+                resultDiv.innerHTML = `
+                    <div class="subject-status ${subjectAverage >= 10 ? 'success' : 'failure'}">
+                        Moyenne: ${subjectAverage.toFixed(2)}/20
+                    </div>
+                `;
+            }
         }
     }
 
@@ -623,7 +646,7 @@ class AcademicManager {
 
                     x = margin;
                     const average = (subject.exam * 0.6 + subject.devoir * 0.4).toFixed(2);
-                    const status = average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+                    const status = 'VALIDÉ';
                     
                     // Draw each cell
                     [
@@ -636,11 +659,7 @@ class AcademicManager {
                     ].forEach((value, i) => {
                         // Set color for status
                         if (i === 5) {
-                            if (average >= 10) {
-                                doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
-                            } else {
-                                doc.setTextColor(198, 40, 40);  // Red for RATTRAPAGE
-                            }
+                            doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
                         }
                         doc.text(value, x + 2, y + 2);
                         if (i === 5) {
@@ -654,7 +673,7 @@ class AcademicManager {
                 // Module average
                 y += 5;
                 const moduleAverage = module.calculateAverage().toFixed(2);
-                const moduleStatus = moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
+                const moduleStatus = module.status;
 
                 // Draw average background
                 doc.setFillColor(240, 240, 240);
@@ -662,11 +681,7 @@ class AcademicManager {
 
                 // Draw average and status
                 doc.text(`Moyenne du Module: ${moduleAverage}`, margin + 2, y + 2);
-                if (parseFloat(moduleAverage) >= 10) {
-                    doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
-                } else {
-                    doc.setTextColor(198, 40, 40);  // Red for RATTRAPAGE
-                }
+                doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
                 doc.text(moduleStatus, margin + 100, y + 2);
                 doc.setTextColor(0, 0, 0);  // Reset to black
 
