@@ -153,15 +153,18 @@ class AcademicManager {
                     <span class="error-message"></span>
                 </div>
                 <div class="input-group">
-                    <input type="number" class="exam" min="0" max="20" step="0.25" placeholder="Note Examen" oninput="this.value = this.value > 20 ? 20 : this.value < 0 ? 0 : this.value">
+                    <input type="text" class="exam" placeholder="Note Examen" 
+                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
                     <span class="error-message"></span>
                 </div>
                 <div class="input-group">
-                    <input type="number" class="devoir" min="0" max="20" step="0.25" placeholder="Note du Devoir" oninput="this.value = this.value > 20 ? 20 : this.value < 0 ? 0 : this.value">
+                    <input type="text" class="devoir" placeholder="Note du Devoir"
+                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
                     <span class="error-message"></span>
                 </div>
                 <div class="input-group">
-                    <input type="number" class="coefficient" min="1" value="" placeholder="Crédit">
+                    <input type="text" class="coefficient" min="1" value="" placeholder="Crédit"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     <span class="error-message"></span>
                 </div>
             </div>
@@ -203,7 +206,7 @@ class AcademicManager {
             });
 
             input.addEventListener('input', (e) => {
-                let value = parseFloat(e.target.value);
+                let value = this.parseGrade(e.target.value);
                 if (value > 20) {
                     e.target.value = 20;
                     this.showWarning(input, 'La note maximale est 20');
@@ -216,7 +219,7 @@ class AcademicManager {
             // Prevent paste of invalid values
             input.addEventListener('paste', (e) => {
                 const pastedData = e.clipboardData.getData('text');
-                const value = parseFloat(pastedData);
+                const value = this.parseGrade(pastedData);
                 if (isNaN(value) || value < 0 || value > 20) {
                     e.preventDefault();
                     this.showWarning(input, 'Veuillez coller une note valide entre 0 et 20');
@@ -244,7 +247,7 @@ class AcademicManager {
 
                 case 'exam':
                 case 'devoir':
-                    const numValue = parseFloat(value);
+                    const numValue = this.parseGrade(value);
                     if (value === '') {
                         errors[input.className] = 'La note est requise';
                     } else if (isNaN(numValue)) {
@@ -334,8 +337,8 @@ class AcademicManager {
                 // Add new subject data
                 const subject = new Subject(
                     nameInput.value,
-                    examInput.value,
-                    devoirInput.value,
+                    this.parseGrade(examInput.value),
+                    this.parseGrade(devoirInput.value),
                     coefficientInput.value
                 );
                 module.addSubject(subject);
@@ -361,6 +364,14 @@ class AcademicManager {
                 showError(input, errors[input.className.split(' ')[0]]);
             });
         });
+    }
+
+    parseGrade(value) {
+        // Replace comma with dot for decimal numbers
+        value = value.toString().replace(',', '.');
+        // Convert to number and check if it's valid
+        const grade = parseFloat(value);
+        return !isNaN(grade) ? grade : 0;
     }
 
     showWarning(input, message) {
@@ -417,8 +428,8 @@ class AcademicManager {
             
             subjects.forEach(subject => {
                 const name = subject.querySelector('.subject-name').value;
-                const exam = parseFloat(subject.querySelector('.exam').value);
-                const devoir = parseFloat(subject.querySelector('.devoir').value);
+                const exam = this.parseGrade(subject.querySelector('.exam').value);
+                const devoir = this.parseGrade(subject.querySelector('.devoir').value);
                 const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
 
                 if (isNaN(exam) || isNaN(devoir)) {
@@ -466,11 +477,7 @@ class AcademicManager {
                 const status = subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
                 
                 // Update subject display
-                const resultDiv = subjectElement.querySelector('.subject-result');
-                resultDiv.innerHTML = `
-                    <span class="subject-average">${subjectAverage.toFixed(2)}/20</span>
-                    <span class="subject-status ${status === 'VALIDÉ' ? 'success' : 'failure'}">${status}</span>
-                `;
+                this.updateSubjectDisplay(subjectElement, exam, devoir, coefficient);
 
                 // Add to module total
                 totalWeightedScore += subjectAverage * coefficient;
@@ -504,6 +511,46 @@ class AcademicManager {
                 sum + this.modules[index].average, 0) / totalModules;
             document.getElementById('overallAverage').textContent = overallAverage.toFixed(2) + '/20';
             document.getElementById('resultsSummary').style.display = 'block';
+        }
+    }
+
+    calculateRattrapageNeeded(exam, devoir) {
+        // TD (devoir) is 40% and Exam is 60% of final grade
+        // To pass, need final grade of 10
+        // In rattrapage, only the exam grade changes
+        // 10 = (newExam * 0.6) + (devoir * 0.4)
+        // Solve for newExam:
+        // newExam = (10 - (devoir * 0.4)) / 0.6
+        const neededGrade = (10 - (devoir * 0.4)) / 0.6;
+        return Math.ceil(neededGrade * 100) / 100; // Round up to 2 decimal places
+    }
+
+    updateSubjectDisplay(subjectElement, exam, devoir, coefficient) {
+        if (subjectElement) {
+            // Calculate subject average
+            const subjectAverage = (exam * 0.6 + devoir * 0.4);
+            const status = subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+            
+            // Calculate needed rattrapage grade if failed
+            let rattrapageInfo = '';
+            if (status === 'RATTRAPAGE') {
+                const neededGrade = this.calculateRattrapageNeeded(exam, devoir);
+                rattrapageInfo = `<div class="rattrapage-info">
+                    Note nécessaire en rattrapage: <strong>${neededGrade}</strong>
+                </div>`;
+            }
+
+            // Update subject display
+            const resultDiv = subjectElement.querySelector('.subject-result');
+            resultDiv.innerHTML = `
+                <div class="subject-average ${status === 'VALIDÉ' ? 'success' : 'failure'}">
+                    Moyenne: ${subjectAverage.toFixed(2)}
+                </div>
+                <div class="subject-status ${status === 'VALIDÉ' ? 'success' : 'failure'}">
+                    ${status}
+                </div>
+                ${rattrapageInfo}
+            `;
         }
     }
 
