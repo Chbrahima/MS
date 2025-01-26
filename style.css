@@ -775,3 +775,7 @@ input::placeholder {
     background-color: #ffebee;
     color: #c62828;
 }
+.failure {
+    background-color: #ffebee;
+    color: #c62828;
+}
