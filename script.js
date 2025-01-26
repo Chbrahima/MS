@@ -159,51 +159,160 @@ class AcademicManager {
         subjectDiv.className = 'subject';
         
         subjectDiv.innerHTML = `
-            <input type="text" class="subject-name" placeholder="Nom de la matière">
-            <input type="number" class="devoir" placeholder="Note Devoir" min="0" max="20" step="0.01">
-            <input type="number" class="exam" placeholder="Note Examen" min="0" max="20" step="0.01">
-            <input type="number" class="coefficient" placeholder="Crédit" min="0" step="0.5">
-            <i class="fas fa-trash-alt delete-subject" title="Supprimer la matière"></i>
-            <div class="subject-result">
-                <!-- Results will be displayed here -->
+            <div class="subject-inputs">
+                <div class="input-group">
+                    <input type="text" class="subject-name" placeholder="Nom de la matière">
+                    <span class="error-message"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="devoir" placeholder="Note du Devoir"
+                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
+                    <span class="error-message"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="exam" placeholder="Note Examen" 
+                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
+                    <span class="error-message"></span>
+                </div>
+                <div class="input-group">
+                    <input type="text" class="coefficient" placeholder="Crédit"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    <span class="error-message"></span>
+                </div>
             </div>
+            <div class="subject-result">
+                <span class="subject-average"></span>
+                <span class="subject-status"></span>
+            </div>
+            <i class="fas fa-trash-alt delete-subject" title="Supprimer la matière"></i>
         `;
 
         subjectsContainer.appendChild(subjectDiv);
 
-        // Add event listener for delete button
+        // Add delete subject event listener
         const deleteButton = subjectDiv.querySelector('.delete-subject');
         deleteButton.addEventListener('click', () => {
             subjectDiv.remove();
             this.calculateModuleAverage(moduleIndex);
         });
-    }
 
-    parseGrade(value) {
-        // Replace comma with dot for decimal numbers
-        value = value.toString().replace(',', '.');
-        // Convert to number and check if it's valid
-        const grade = parseFloat(value);
-        return !isNaN(grade) ? grade : 0;
+        // Add grade input restrictions
+        const gradeInputs = subjectDiv.querySelectorAll('.exam, .devoir');
+        gradeInputs.forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                // Allow: backspace, delete, tab, escape, enter
+                if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+                    // Allow: Ctrl+A
+                    (e.keyCode === 65 && e.ctrlKey === true) ||
+                    // Allow: home, end, left, right
+                    (e.keyCode >= 35 && e.keyCode <= 39) ||
+                    // Allow decimal point
+                    (e.keyCode === 190 || e.keyCode === 110)) {
+                    return;
+                }
+                // Ensure that it is a number and stop the keypress if not
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
+                    (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+            input.addEventListener('input', (e) => {
+                let value = parseFloat(e.target.value.replace(',', '.'));
+                if (isNaN(value)) return;
+                
+                if (value > 20) {
+                    e.target.value = '20';
+                    this.showWarning(input, 'La note maximale est 20');
+                } else if (value < 0) {
+                    e.target.value = '0';
+                    this.showWarning(input, 'La note minimale est 0');
+                }
+            });
+
+            // Prevent paste of invalid values
+            input.addEventListener('paste', (e) => {
+                const pastedData = e.clipboardData.getData('text');
+                const value = parseFloat(pastedData.replace(',', '.'));
+                if (isNaN(value) || value < 0 || value > 20) {
+                    e.preventDefault();
+                    this.showWarning(input, 'Veuillez coller une note valide entre 0 et 20');
+                }
+            });
+        });
+
+        // Add input validation
+        const inputs = subjectDiv.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => {
+                this.validateAndUpdateSubject(subjectDiv, moduleIndex);
+            });
+
+            input.addEventListener('blur', () => {
+                this.validateAndUpdateSubject(subjectDiv, moduleIndex);
+            });
+        });
     }
 
     showWarning(input, message) {
-        const warning = document.createElement('div');
-        warning.className = 'warning-message';
-        warning.textContent = message;
-        
-        // Position the warning
-        const rect = input.getBoundingClientRect();
-        warning.style.position = 'absolute';
-        warning.style.top = `${rect.bottom + window.scrollY + 5}px`;
-        warning.style.left = `${rect.left + window.scrollX}px`;
-        
-        document.body.appendChild(warning);
-        
-        // Remove warning after 3 seconds
-        setTimeout(() => {
-            warning.remove();
-        }, 3000);
+        const errorSpan = input.parentElement.querySelector('.error-message');
+        if (errorSpan) {
+            errorSpan.textContent = message;
+            setTimeout(() => {
+                errorSpan.textContent = '';
+            }, 3000);
+        }
+    }
+
+    validateAndUpdateSubject(subjectDiv, moduleIndex) {
+        const nameInput = subjectDiv.querySelector('.subject-name');
+        const examInput = subjectDiv.querySelector('.exam');
+        const devoirInput = subjectDiv.querySelector('.devoir');
+        const coefficientInput = subjectDiv.querySelector('.coefficient');
+        const resultDiv = subjectDiv.querySelector('.subject-result');
+
+        // Validate inputs
+        const name = nameInput.value.trim();
+        const exam = parseFloat(examInput.value.replace(',', '.')) || 0;
+        const devoir = parseFloat(devoirInput.value.replace(',', '.')) || 0;
+        const coefficient = parseInt(coefficientInput.value) || 0;
+
+        // Show/hide error messages
+        this.validateField(nameInput, name, 'Le nom de la matière est requis');
+        this.validateField(examInput, exam, 'La note doit être entre 0 et 20');
+        this.validateField(devoirInput, devoir, 'La note doit être entre 0 et 20');
+        this.validateField(coefficientInput, coefficient, 'Le crédit est requis');
+
+        // Calculate and display average if all inputs are valid
+        if (name && exam >= 0 && exam <= 20 && devoir >= 0 && devoir <= 20 && coefficient > 0) {
+            const average = (exam * 0.6 + devoir * 0.4).toFixed(2);
+            const status = average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+            
+            const averageSpan = resultDiv.querySelector('.subject-average');
+            const statusSpan = resultDiv.querySelector('.subject-status');
+            
+            if (averageSpan && statusSpan) {
+                averageSpan.textContent = `${average}/20`;
+                statusSpan.textContent = status;
+                statusSpan.className = 'subject-status ' + (status === 'VALIDÉ' ? 'success' : 'failure');
+            }
+        }
+
+        // Update module average
+        this.calculateModuleAverage(moduleIndex);
+    }
+
+    validateField(input, value, errorMessage) {
+        const errorSpan = input.parentElement.querySelector('.error-message');
+        if (errorSpan) {
+            if (!value || (typeof value === 'number' && (value < 0 || value > 20))) {
+                errorSpan.textContent = errorMessage;
+                input.classList.add('error');
+            } else {
+                errorSpan.textContent = '';
+                input.classList.remove('error');
+            }
+        }
     }
 
     deleteSubject(moduleIndex, subjectIndex) {
@@ -245,11 +354,11 @@ class AcademicManager {
             
             subjects.forEach(subject => {
                 const name = subject.querySelector('.subject-name').value;
-                const exam = this.parseGrade(subject.querySelector('.exam').value);
-                const devoir = this.parseGrade(subject.querySelector('.devoir').value);
+                const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
+                const exam = parseFloat(subject.querySelector('.exam').value) || 0;
                 const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
 
-                if (isNaN(exam) || isNaN(devoir)) {
+                if (isNaN(devoir) || isNaN(exam)) {
                     hasValidInput = false;
                     return;
                 }
@@ -266,8 +375,8 @@ class AcademicManager {
                     element: subject,
                     data: {
                         name: name,
-                        exam: exam,
                         devoir: devoir,
+                        exam: exam,
                         coefficient: coefficient,
                         average: subjectAverage
                     }
@@ -367,6 +476,14 @@ class AcademicManager {
         }
     }
 
+    parseGrade(value) {
+        // Replace comma with dot for decimal numbers
+        value = value.toString().replace(',', '.');
+        // Convert to number and check if it's valid
+        const grade = parseFloat(value);
+        return !isNaN(grade) ? grade : 0;
+    }
+
     calculateRattrapageNeeded(exam, devoir) {
         // TD (devoir) is 40% and Exam is 60% of final grade
         // To pass, need final grade of 10
@@ -441,7 +558,7 @@ class AcademicManager {
             doc.text(`Date: ${currentDate}`, margin, y);
             y += 20;
 
-            // Headers and content setup with reordered columns
+            // Headers and content setup
             const colWidths = [50, 25, 25, 20, 30, 35];
             const headers = ['Matière', 'Devoir', 'Examen', 'Crédit', 'Moyenne', 'Status'];
             
@@ -507,7 +624,7 @@ class AcademicManager {
                         doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
                     }
 
-                    // Draw each cell with reordered columns
+                    // Draw each cell
                     x = margin;
                     doc.setFont('helvetica', 'normal');
                     [name, devoir.toString(), exam.toString(), coefficient.toString(), average, status]
