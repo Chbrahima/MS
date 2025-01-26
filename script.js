@@ -278,10 +278,10 @@ class AcademicManager {
         const coefficient = parseInt(coefficientInput.value) || 0;
 
         // Show/hide error messages
-        this.validateField(nameInput, name, 'Le nom de la matière est requis');
-        this.validateField(examInput, exam, 'La note doit être entre 0 et 20');
-        this.validateField(devoirInput, devoir, 'La note doit être entre 0 et 20');
-        this.validateField(coefficientInput, coefficient, 'Le crédit est requis');
+        this.validateField(nameInput, name, 'Le nom de la matière est requis', 'empty');
+        this.validateField(examInput, exam, 'La note maximale est 20', 'grade');
+        this.validateField(devoirInput, devoir, 'La note maximale est 20', 'grade');
+        this.validateField(coefficientInput, coefficient, 'Le crédit est requis', 'empty');
 
         // Calculate and display average if all inputs are valid
         if (name && exam >= 0 && exam <= 20 && devoir >= 0 && devoir <= 20 && coefficient > 0) {
@@ -302,15 +302,27 @@ class AcademicManager {
         this.calculateModuleAverage(moduleIndex);
     }
 
-    validateField(input, value, errorMessage) {
+    validateField(input, value, errorMessage, type) {
         const errorSpan = input.parentElement.querySelector('.error-message');
         if (errorSpan) {
-            if (!value || (typeof value === 'number' && (value < 0 || value > 20))) {
-                errorSpan.textContent = errorMessage;
-                input.classList.add('error');
-            } else {
-                errorSpan.textContent = '';
-                input.classList.remove('error');
+            if (type === 'grade') {
+                // Only show error for grades if value is greater than 20
+                if (value > 20) {
+                    errorSpan.textContent = errorMessage;
+                    input.classList.add('error');
+                } else {
+                    errorSpan.textContent = '';
+                    input.classList.remove('error');
+                }
+            } else if (type === 'empty') {
+                // Only show error for empty required fields
+                if (!value) {
+                    errorSpan.textContent = errorMessage;
+                    input.classList.add('error');
+                } else {
+                    errorSpan.textContent = '';
+                    input.classList.remove('error');
+                }
             }
         }
     }
