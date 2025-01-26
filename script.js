@@ -89,43 +89,54 @@ class AcademicManager {
     }
 
     addModule() {
-        const moduleCount = this.modules.length + 1;
-        const module = new Module(""); // Empty name initially
-        this.modules.push(module);
+        const moduleIndex = this.modules.length;
+        const moduleDiv = document.createElement('div');
+        moduleDiv.className = 'module';
+        moduleDiv.id = `module${moduleIndex}`;
 
-        const moduleElement = document.createElement('div');
-        moduleElement.className = 'module';
-        moduleElement.id = `module${this.modules.length - 1}`;
+        const moduleNameInput = document.createElement('input');
+        moduleNameInput.type = 'text';
+        moduleNameInput.className = 'module-name';
+        moduleNameInput.placeholder = `Module ${moduleIndex + 1}`;
+        
+        // Create new module instance
+        const newModule = new Module();
+        
+        // Update module name when input changes
+        moduleNameInput.addEventListener('input', (e) => {
+            newModule.name = e.target.value || `Module ${moduleIndex + 1}`;
+        });
+        
+        // Store initial name
+        newModule.name = `Module ${moduleIndex + 1}`;
 
-        moduleElement.innerHTML = `
+        moduleDiv.innerHTML += `
             <div class="module-header">
-                <input type="text" class="module-name" placeholder="Nom du module" value="">
                 <i class="fas fa-trash-alt delete-module" title="Supprimer le module"></i>
             </div>
             <div class="subjects"></div>
             <button class="btn add-subject">Ajouter une Matière</button>
             <div class="module-result">
-                <div class="module-average"></div>
-                <div class="module-status"></div>
+                <!-- Module results will be displayed here -->
             </div>
         `;
 
-        document.getElementById('modulesSection').appendChild(moduleElement);
+        // Move the name input into the header after setting innerHTML
+        const header = moduleDiv.querySelector('.module-header');
+        header.insertBefore(moduleNameInput, header.firstChild);
 
-        // Add event listener for module name changes
-        const moduleNameInput = moduleElement.querySelector('.module-name');
-        moduleNameInput.addEventListener('input', () => {
-            module.name = moduleNameInput.value;
-        });
+        document.getElementById('modulesSection').appendChild(moduleDiv);
 
         // Add event listener for delete module icon
-        moduleElement.querySelector('.delete-module').addEventListener('click', () => {
-            this.deleteModule(this.modules.length - 1);
+        moduleDiv.querySelector('.delete-module').addEventListener('click', () => {
+            this.deleteModule(moduleIndex);
         });
 
-        moduleElement.querySelector('.add-subject').addEventListener('click', () => {
-            this.addSubject(this.modules.length - 1);
+        moduleDiv.querySelector('.add-subject').addEventListener('click', () => {
+            this.addSubject(moduleIndex);
         });
+
+        this.modules.push(newModule);
     }
 
     deleteModule(moduleIndex) {
@@ -419,12 +430,16 @@ class AcademicManager {
     calculateAllModules() {
         let hasValidInput = true;
         let moduleData = [];
+        let allModuleAverages = [];
         
-        // First collect all the data
+        // First collect all the data and calculate module averages
         this.modules.forEach((module, moduleIndex) => {
             const moduleElement = document.getElementById(`module${moduleIndex}`);
             const subjects = moduleElement.querySelectorAll('.subject');
             let moduleSubjects = [];
+            let totalWeightedScore = 0;
+            let totalCoefficients = 0;
+            let hasSubjectUnderFive = false;
             
             subjects.forEach(subject => {
                 const name = subject.querySelector('.subject-name').value;
@@ -437,20 +452,38 @@ class AcademicManager {
                     return;
                 }
 
+                const subjectAverage = (exam * 0.6 + devoir * 0.4);
+                if (subjectAverage < 5) {
+                    hasSubjectUnderFive = true;
+                }
+
+                totalWeightedScore += subjectAverage * coefficient;
+                totalCoefficients += coefficient;
+
                 moduleSubjects.push({
                     element: subject,
                     data: {
                         name: name,
                         exam: exam,
                         devoir: devoir,
-                        coefficient: coefficient
+                        coefficient: coefficient,
+                        average: subjectAverage
                     }
                 });
             });
 
+            const moduleAverage = totalCoefficients > 0 ? totalWeightedScore / totalCoefficients : 0;
+            allModuleAverages.push({
+                index: moduleIndex,
+                average: moduleAverage,
+                hasSubjectUnderFive: hasSubjectUnderFive
+            });
+
             moduleData.push({
                 element: moduleElement,
-                subjects: moduleSubjects
+                subjects: moduleSubjects,
+                average: moduleAverage,
+                hasSubjectUnderFive: hasSubjectUnderFive
             });
         });
 
@@ -459,59 +492,33 @@ class AcademicManager {
             return;
         }
 
-        // Now process the data and update the display
+        // Check if any module has average < 9
+        const hasModuleUnderNine = allModuleAverages.some(mod => mod.average < 9);
+
+        // Now process each module with all conditions
         moduleData.forEach((moduleInfo, moduleIndex) => {
             const module = this.modules[moduleIndex];
-            module.subjects = []; // Clear existing subjects
+            const moduleAverage = moduleInfo.average;
             
-            let totalWeightedScore = 0;
-            let totalCoefficients = 0;
+            // A module is validated if:
+            // 1. Its average is >= 9
+            // 2. No subject has average < 5
+            // 3. No other module has average < 9
+            const isModuleValidated = moduleAverage >= 9 && 
+                                    !moduleInfo.hasSubjectUnderFive && 
+                                    !hasModuleUnderNine;
 
-            // Process each subject
-            moduleInfo.subjects.forEach(subjectInfo => {
-                const { name, exam, devoir, coefficient } = subjectInfo.data;
-                const subjectElement = subjectInfo.element;
-                
-                // Calculate subject average
-                const subjectAverage = (exam * 0.6 + devoir * 0.4);
-                
-                const resultDiv = subjectElement.querySelector('.subject-result');
-                if (resultDiv) {
-                    resultDiv.innerHTML = `
-                        <div class="subject-status ${subjectAverage >= 10 ? 'success' : 'failure'}">
-                            Moyenne: ${subjectAverage.toFixed(2)}/20
-                        </div>
-                    `;
-                }
+            const moduleStatus = isModuleValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
 
-                // Add subject data to module
-                const subject = new Subject(
-                    name,
-                    exam,
-                    devoir,
-                    coefficient
-                );
-                module.addSubject(subject);
-
-                // Update total weighted score and coefficients
-                totalWeightedScore += subjectAverage * coefficient;
-                totalCoefficients += coefficient;
-            });
-
-            // Calculate and display module average
-            const moduleAverage = totalWeightedScore / totalCoefficients;
-            const moduleStatus = moduleAverage >= 10 ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
-            const isModulePassed = moduleAverage >= 10;
-
-            // Update all subject statuses based on their individual averages
+            // Update subject displays
             moduleInfo.subjects.forEach(subjectInfo => {
                 const subjectElement = subjectInfo.element;
                 if (subjectElement) {
-                    const subjectAverage = (subjectInfo.data.exam * 0.6 + subjectInfo.data.devoir * 0.4);
-                    
-                    // If module is passed, all subjects are VALIDÉ (compensated)
-                    // If module is not passed, only subjects with average >= 10 are VALIDÉ
-                    const status = isModulePassed || subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+                    const subjectAverage = subjectInfo.data.average;
+                    // A subject is validated if either:
+                    // 1. Its own average is >= 10, or
+                    // 2. The module is validated (compensation)
+                    const status = isModuleValidated || subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
                     
                     const resultDiv = subjectElement.querySelector('.subject-result');
                     if (resultDiv) {
@@ -524,15 +531,15 @@ class AcademicManager {
                 }
             });
 
+            // Update module display
             const moduleResult = moduleInfo.element.querySelector('.module-result');
-            moduleResult.innerHTML = `
-                <div class="module-average ${moduleAverage >= 10 ? 'success' : 'failure'}">
-                    Moyenne: ${moduleAverage.toFixed(2)}
-                </div>
-                <div class="module-status ${moduleAverage >= 10 ? 'success' : 'failure'}">
-                    ${moduleStatus}
-                </div>
-            `;
+            if (moduleResult) {
+                moduleResult.innerHTML = `
+                    <div class="module-status ${isModuleValidated ? 'success' : 'failure'}">
+                        ${moduleStatus}: ${moduleAverage.toFixed(2)}
+                    </div>
+                `;
+            }
 
             // Store module data
             module.average = moduleAverage;
@@ -541,12 +548,20 @@ class AcademicManager {
         });
 
         // Calculate and display overall average
-        const totalModules = moduleData.length;
-        if (totalModules > 0) {
-            const overallAverage = moduleData.reduce((sum, moduleInfo, index) => 
-                sum + this.modules[index].average, 0) / totalModules;
-            document.getElementById('overallAverage').textContent = overallAverage.toFixed(2) + '/20';
-            document.getElementById('resultsSummary').style.display = 'block';
+        if (moduleData.length > 0) {
+            const overallAverage = moduleData.reduce((sum, moduleInfo) => 
+                sum + moduleInfo.average, 0) / moduleData.length;
+            
+            // Create or update overall average display
+            let overallAverageDiv = document.getElementById('overallAverage');
+            if (!overallAverageDiv) {
+                overallAverageDiv = document.createElement('div');
+                overallAverageDiv.id = 'overallAverage';
+                document.getElementById('modulesSection').appendChild(overallAverageDiv);
+            }
+            
+            overallAverageDiv.className = `overall-average ${overallAverage >= 10 ? 'success' : 'failure'}`;
+            overallAverageDiv.innerHTML = `Moyenne Générale: ${overallAverage.toFixed(2)}`;
         }
     }
 
@@ -581,19 +596,31 @@ class AcademicManager {
         try {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const margin = 20;
-            let y = 20;
+            const margin = 15;
+            let y = 25;
 
-            // Add header
-            doc.setFontSize(18);
-            doc.text('Relevé de Notes', 105, y, { align: 'center' });
-            y += 20;
+            // Add header with gradient-like effect
+            doc.setFillColor(41, 128, 185);
+            doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
+            doc.setFillColor(52, 152, 219);
+            doc.rect(0, 0, doc.internal.pageSize.width, 35, 'F');
 
-            // Add student info
+            // Add title
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(24);
+            doc.setTextColor(255, 255, 255);
+            doc.text('Relevé de Notes', doc.internal.pageSize.width / 2, 25, { align: 'center' });
+
+            // Reset text color and move below header
+            doc.setTextColor(0, 0, 0);
+            y = 60;
+
+            // Get student info
             const studentName = document.getElementById('studentName').value;
             const studentId = document.getElementById('studentId').value;
-            
+
             doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
             if (studentName) {
                 doc.text(`Nom et Prénom: ${studentName}`, margin, y);
                 y += 10;
@@ -602,97 +629,167 @@ class AcademicManager {
                 doc.text(`N° d'Inscription: ${studentId}`, margin, y);
                 y += 10;
             }
-            y += 10;
 
-            // For each module
-            this.modules.forEach((module, index) => {
+            // Add date
+            const currentDate = new Date().toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            doc.text(`Date: ${currentDate}`, margin, y);
+            y += 20;
+
+            // Headers and content setup
+            const colWidths = [50, 25, 25, 20, 30, 35];
+            const headers = ['Matière', 'Examen', 'TD', 'Coef', 'Moyenne', 'Status'];
+            
+            // Process each module
+            this.modules.forEach((module, moduleIndex) => {
                 // Check if we need a new page
                 if (y > 250) {
                     doc.addPage();
-                    y = 20;
+                    y = 25;
                 }
 
-                // Module header
-                doc.setFillColor(33, 150, 243);
-                doc.rect(margin, y - 5, 170, 10, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.text(`Module: ${module.name}`, margin + 5, y + 3);
-                doc.setTextColor(0, 0, 0);
-                y += 15;
+                // Get module element
+                const moduleElement = document.getElementById(`module${moduleIndex}`);
+                if (!moduleElement) return;
 
-                // Table headers
-                const headers = ['Matière', 'Examen', 'Devoir', 'Coef', 'Moyenne', 'Status'];
-                const colWidths = [60, 20, 20, 20, 25, 25];
+                // Module title with background
+                doc.setFillColor(236, 240, 241);
+                doc.rect(margin - 5, y - 5, doc.internal.pageSize.width - 2 * (margin - 5), 12, 'F');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(14);
+                
+                // Get module name from input
+                const moduleNameInput = moduleElement.querySelector('.module-name');
+                const moduleName = moduleNameInput ? moduleNameInput.value : `Module ${moduleIndex + 1}`;
+                doc.text(moduleName, margin, y + 3);
+                y += 20;
+
+                // Table headers with modern styling
+                doc.setFillColor(52, 152, 219);
+                doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
+                
                 let x = margin;
-
-                // Draw header background
-                doc.setFillColor(240, 240, 240);
-                doc.rect(margin, y - 5, 170, 8, 'F');
-
-                // Draw headers
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(10);
+                doc.setTextColor(255, 255, 255);
                 headers.forEach((header, i) => {
-                    doc.text(header, x + 2, y + 2);
+                    doc.text(header, x, y + 2);
                     x += colWidths[i];
                 });
-                y += 10;
+                doc.setTextColor(0, 0, 0);
+                y += 12;
 
-                // Draw subjects
-                module.subjects.forEach((subject, idx) => {
-                    // Alternate row background
+                // Get all subjects from the module element
+                const subjects = moduleElement.querySelectorAll('.subject');
+                subjects.forEach((subject, idx) => {
+                    // Get subject data from the actual form fields
+                    const name = subject.querySelector('.subject-name').value;
+                    const exam = parseFloat(subject.querySelector('.exam').value) || 0;
+                    const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
+                    const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
+                    const average = (exam * 0.6 + devoir * 0.4).toFixed(2);
+                    
+                    // Get the actual status from the website
+                    const resultDiv = subject.querySelector('.subject-result');
+                    const statusDiv = resultDiv ? resultDiv.querySelector('.subject-status') : null;
+                    const status = statusDiv ? 
+                        (statusDiv.classList.contains('success') ? 'VALIDÉ' : 'RATTRAPAGE') : 
+                        (average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE');
+
+                    // Alternate row colors
                     if (idx % 2 === 0) {
-                        doc.setFillColor(249, 249, 249);
-                        doc.rect(margin, y - 5, 170, 8, 'F');
+                        doc.setFillColor(245, 247, 250);
+                        doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
                     }
 
-                    x = margin;
-                    const average = (subject.exam * 0.6 + subject.devoir * 0.4).toFixed(2);
-                    const status = 'VALIDÉ';
-                    
                     // Draw each cell
-                    [
-                        subject.name,
-                        subject.exam.toString(),
-                        subject.devoir.toString(),
-                        subject.coefficient.toString(),
-                        average.toString(),
-                        status
-                    ].forEach((value, i) => {
-                        // Set color for status
-                        if (i === 5) {
-                            doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
-                        }
-                        doc.text(value, x + 2, y + 2);
-                        if (i === 5) {
-                            doc.setTextColor(0, 0, 0);  // Reset to black
-                        }
-                        x += colWidths[i];
-                    });
-                    y += 8;
+                    x = margin;
+                    doc.setFont('helvetica', 'normal');
+                    [name, exam.toString(), devoir.toString(), coefficient.toString(), average, status]
+                        .forEach((value, i) => {
+                            if (i === 5) {
+                                doc.setTextColor(status === 'VALIDÉ' ? 46 : 198, 
+                                               status === 'VALIDÉ' ? 125 : 40, 
+                                               status === 'VALIDÉ' ? 50 : 40);
+                                doc.setFont('helvetica', 'bold');
+                            }
+                            doc.text(value || '-', x, y + 2);
+                            if (i === 5) {
+                                doc.setTextColor(0, 0, 0);
+                                doc.setFont('helvetica', 'normal');
+                            }
+                            x += colWidths[i];
+                        });
+                    y += 10;
                 });
 
-                // Module average
-                y += 5;
+                // Get module result from the website
+                const moduleResult = moduleElement.querySelector('.module-result');
+                const moduleStatus = moduleResult ? moduleResult.querySelector('.module-status') : null;
+                const isValidated = moduleStatus ? moduleStatus.classList.contains('success') : false;
                 const moduleAverage = module.calculateAverage().toFixed(2);
-                const moduleStatus = module.status;
+                const moduleStatusText = isValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
 
-                // Draw average background
-                doc.setFillColor(240, 240, 240);
-                doc.rect(margin, y - 5, 170, 8, 'F');
+                // Draw module result box
+                y += 5;
+                doc.setFillColor(236, 240, 241);
+                doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 15, 'F');
+                
+                // Module status text
+                doc.setFont('helvetica', 'bold');
+                doc.text(`${moduleStatusText}: ${moduleAverage}`, margin, y + 4);
+                doc.setTextColor(isValidated ? 46 : 198, isValidated ? 125 : 40, isValidated ? 50 : 40);
+                doc.setTextColor(0, 0, 0);
 
-                // Draw average and status
-                doc.text(`Moyenne du Module: ${moduleAverage}`, margin + 2, y + 2);
-                doc.setTextColor(46, 125, 50);  // Green for VALIDÉ
-                doc.text(moduleStatus, margin + 100, y + 2);
-                doc.setTextColor(0, 0, 0);  // Reset to black
-
-                y += 20;
+                y += 25;
             });
 
-            // Save the PDF
+            // Get general average from the website
+            const overallAverageElement = document.getElementById('overallAverage');
+            if (overallAverageElement) {
+                const generalAverage = parseFloat(overallAverageElement.textContent.match(/[\d.]+/)[0]);
+                const isPassingGeneral = generalAverage >= 10;
+
+                // Draw decorative line
+                doc.setDrawColor(52, 152, 219);
+                doc.setLineWidth(0.5);
+                doc.line(margin, y - 5, doc.internal.pageSize.width - margin, y - 5);
+
+                // Create elegant box for general average
+                doc.setFillColor(236, 240, 241);
+                doc.rect(margin - 2, y, colWidths.reduce((a, b) => a + b, 0) + 4, 20, 'F');
+                
+                // Add general average text with appropriate color
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(14);
+                doc.setTextColor(isPassingGeneral ? 46 : 198, isPassingGeneral ? 125 : 40, isPassingGeneral ? 50 : 40);
+                doc.text(`Moyenne Générale: ${generalAverage.toFixed(2)}`, doc.internal.pageSize.width / 2, y + 13, { align: 'center' });
+            }
+
+            // Add signature line at the bottom
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(10);
+            doc.setTextColor(128, 128, 128);
+            const signature = "Par CHEIKH BRAHIM ( MS )";
+            doc.text(signature, doc.internal.pageSize.width - margin - doc.getTextWidth(signature), doc.internal.pageSize.height - 20);
+
+            // Add page numbers
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFont('helvetica', 'italic');
+                doc.setFontSize(8);
+                doc.setTextColor(128, 128, 128);
+                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+            }
+
             doc.save('releve_notes.pdf');
         } catch (error) {
             console.error('Error generating PDF:', error);
-            alert('Une erreur est survenue lors de la génération du PDF');
+            alert('Error generating PDF. Please try again.');
         }
     }
 
