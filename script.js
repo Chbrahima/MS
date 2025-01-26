@@ -154,226 +154,28 @@ class AcademicManager {
     }
 
     addSubject(moduleIndex) {
-        const subjectElement = document.createElement('div');
-        subjectElement.className = 'subject';
+        const subjectsContainer = document.querySelector(`#module${moduleIndex} .subjects`);
+        const subjectDiv = document.createElement('div');
+        subjectDiv.className = 'subject';
         
-        subjectElement.innerHTML = `
-            <div class="subject-inputs">
-                <div class="input-group">
-                    <input type="text" class="subject-name" placeholder="Nom de la matière">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="exam" placeholder="Note Examen" 
-                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="devoir" placeholder="Note du Devoir"
-                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="coefficient" min="1" value="" placeholder="Crédit"
-                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-            </div>
-            <div class="subject-result" style="display: none;">
-                <span class="subject-average"></span>
-                <span class="subject-status"></span>
-            </div>
+        subjectDiv.innerHTML = `
+            <input type="text" class="subject-name" placeholder="Nom de la matière">
+            <input type="number" class="devoir" placeholder="Note Devoir" min="0" max="20" step="0.01">
+            <input type="number" class="exam" placeholder="Note Examen" min="0" max="20" step="0.01">
+            <input type="number" class="coefficient" placeholder="Crédit" min="0" step="0.5">
             <i class="fas fa-trash-alt delete-subject" title="Supprimer la matière"></i>
+            <div class="subject-result">
+                <!-- Results will be displayed here -->
+            </div>
         `;
 
-        const subjectsContainer = document.querySelector(`#module${moduleIndex} .subjects`);
-        subjectsContainer.appendChild(subjectElement);
+        subjectsContainer.appendChild(subjectDiv);
 
-        // Add delete subject event listener
-        subjectElement.querySelector('.delete-subject').addEventListener('click', () => {
-            const subjectIndex = Array.from(subjectsContainer.children).indexOf(subjectElement);
-            this.deleteSubject(moduleIndex, subjectIndex);
-        });
-
-        // Add grade input restrictions
-        const gradeInputs = subjectElement.querySelectorAll('.exam, .devoir');
-        gradeInputs.forEach(input => {
-            input.addEventListener('keydown', (e) => {
-                // Allow: backspace, delete, tab, escape, enter
-                if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
-                    // Allow: Ctrl+A
-                    (e.keyCode === 65 && e.ctrlKey === true) ||
-                    // Allow: home, end, left, right
-                    (e.keyCode >= 35 && e.keyCode <= 39) ||
-                    // Allow decimal point
-                    (e.keyCode === 190 || e.keyCode === 110)) {
-                    return;
-                }
-                // Ensure that it is a number and stop the keypress if not
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
-                    (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                }
-            });
-
-            input.addEventListener('input', (e) => {
-                let value = this.parseGrade(e.target.value);
-                if (value > 20) {
-                    e.target.value = 20;
-                    this.showWarning(input, 'La note maximale est 20');
-                } else if (value < 0) {
-                    e.target.value = 0;
-                    this.showWarning(input, 'La note minimale est 0');
-                }
-            });
-
-            // Prevent paste of invalid values
-            input.addEventListener('paste', (e) => {
-                const pastedData = e.clipboardData.getData('text');
-                const value = this.parseGrade(pastedData);
-                if (isNaN(value) || value < 0 || value > 20) {
-                    e.preventDefault();
-                    this.showWarning(input, 'Veuillez coller une note valide entre 0 et 20');
-                }
-            });
-        });
-
-        // Validation functions
-        const validateInput = (input, value) => {
-            const errors = {
-                name: '',
-                exam: '',
-                devoir: '',
-                coefficient: ''
-            };
-
-            switch (input.className) {
-                case 'subject-name':
-                    if (!value.trim()) {
-                        errors.name = 'Le nom de la matière est requis';
-                    } else if (value.length < 2) {
-                        errors.name = 'Le nom doit contenir au moins 2 caractères';
-                    }
-                    break;
-
-                case 'exam':
-                case 'devoir':
-                    const numValue = this.parseGrade(value);
-                    if (value === '') {
-                        errors[input.className] = 'La note est requise';
-                    } else if (isNaN(numValue)) {
-                        errors[input.className] = 'Veuillez entrer un nombre valide';
-                    } else if (numValue < 0) {
-                        errors[input.className] = 'La note ne peut pas être négative';
-                        input.value = 0;
-                    } else if (numValue > 20) {
-                        errors[input.className] = 'La note ne peut pas dépasser 20';
-                        input.value = 20;
-                    }
-                    break;
-
-                case 'coefficient':
-                    const coefValue = parseInt(value);
-                    if (!value) {
-                        errors.coefficient = 'Le crédit est requis';
-                    } else if (isNaN(coefValue) || coefValue < 1) {
-                        errors.coefficient = 'Le crédit doit être un nombre positif';
-                    }
-                    break;
-            }
-
-            return errors;
-        };
-
-        const showError = (input, message) => {
-            const errorSpan = input.parentElement.querySelector('.error-message');
-            errorSpan.textContent = message;
-            input.classList.toggle('error', message !== '');
-        };
-
-        // Add input event listeners
-        const inputs = subjectElement.querySelectorAll('input');
-        const module = this.modules[moduleIndex];
-        let currentValues = {
-            name: '',
-            exam: '',
-            devoir: '',
-            coefficient: ''
-        };
-
-        const updateSubject = () => {
-            const nameInput = subjectElement.querySelector('.subject-name');
-            const examInput = subjectElement.querySelector('.exam');
-            const devoirInput = subjectElement.querySelector('.devoir');
-            const coefficientInput = subjectElement.querySelector('.coefficient');
-            const resultDiv = subjectElement.querySelector('.subject-result');
-
-            // Validate all inputs
-            const errors = {
-                ...validateInput(nameInput, nameInput.value),
-                ...validateInput(examInput, examInput.value),
-                ...validateInput(devoirInput, devoirInput.value),
-                ...validateInput(coefficientInput, coefficientInput.value)
-            };
-
-            // Show errors if any
-            showError(nameInput, errors.name);
-            showError(examInput, errors.exam);
-            showError(devoirInput, errors.devoir);
-            showError(coefficientInput, errors.coefficient);
-
-            // Update current values
-            currentValues = {
-                name: nameInput.value,
-                exam: examInput.value,
-                devoir: devoirInput.value,
-                coefficient: coefficientInput.value
-            };
-
-            // Check if all inputs are valid
-            const isValid = !Object.values(errors).some(error => error !== '');
-            const isComplete = nameInput.value && 
-                             examInput.value !== '' && 
-                             devoirInput.value !== '';
-
-            if (isValid && isComplete) {
-                // Get the current subject index
-                const subjectIndex = Array.from(subjectsContainer.children).indexOf(subjectElement);
-                
-                // Remove old subject data if it exists
-                if (module.subjects[subjectIndex]) {
-                    module.subjects.splice(subjectIndex, 1);
-                }
-
-                // Add new subject data
-                const subject = new Subject(
-                    nameInput.value,
-                    this.parseGrade(examInput.value),
-                    this.parseGrade(devoirInput.value),
-                    coefficientInput.value
-                );
-                module.addSubject(subject);
-
-                // Show results
-                resultDiv.style.display = 'flex';
-                const average = subject.calculateAverage();
-                
-                const averageSpan = resultDiv.querySelector('.subject-average');
-                averageSpan.textContent = `${average.toFixed(2)}/20`;
-
-                // Update module display
-                this.updateModuleDisplay(moduleIndex);
-            } else {
-                resultDiv.style.display = 'none';
-            }
-        };
-
-        inputs.forEach(input => {
-            input.addEventListener('input', updateSubject);
-            input.addEventListener('blur', () => {
-                const errors = validateInput(input, input.value);
-                showError(input, errors[input.className.split(' ')[0]]);
-            });
+        // Add event listener for delete button
+        const deleteButton = subjectDiv.querySelector('.delete-subject');
+        deleteButton.addEventListener('click', () => {
+            subjectDiv.remove();
+            this.calculateModuleAverage(moduleIndex);
         });
     }
 
@@ -639,9 +441,9 @@ class AcademicManager {
             doc.text(`Date: ${currentDate}`, margin, y);
             y += 20;
 
-            // Headers and content setup
+            // Headers and content setup with reordered columns
             const colWidths = [50, 25, 25, 20, 30, 35];
-            const headers = ['Matière', 'Examen', 'TD', 'Coef', 'Moyenne', 'Status'];
+            const headers = ['Matière', 'Devoir', 'Examen', 'Crédit', 'Moyenne', 'Status'];
             
             // Process each module
             this.modules.forEach((module, moduleIndex) => {
@@ -687,8 +489,8 @@ class AcademicManager {
                 subjects.forEach((subject, idx) => {
                     // Get subject data from the actual form fields
                     const name = subject.querySelector('.subject-name').value;
-                    const exam = parseFloat(subject.querySelector('.exam').value) || 0;
                     const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
+                    const exam = parseFloat(subject.querySelector('.exam').value) || 0;
                     const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
                     const average = (exam * 0.6 + devoir * 0.4).toFixed(2);
                     
@@ -705,10 +507,10 @@ class AcademicManager {
                         doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
                     }
 
-                    // Draw each cell
+                    // Draw each cell with reordered columns
                     x = margin;
                     doc.setFont('helvetica', 'normal');
-                    [name, exam.toString(), devoir.toString(), coefficient.toString(), average, status]
+                    [name, devoir.toString(), exam.toString(), coefficient.toString(), average, status]
                         .forEach((value, i) => {
                             if (i === 5) {
                                 doc.setTextColor(status === 'VALIDÉ' ? 46 : 198, 
@@ -730,7 +532,17 @@ class AcademicManager {
                 const moduleResult = moduleElement.querySelector('.module-result');
                 const moduleStatus = moduleResult ? moduleResult.querySelector('.module-status') : null;
                 const isValidated = moduleStatus ? moduleStatus.classList.contains('success') : false;
-                const moduleAverage = module.calculateAverage().toFixed(2);
+                
+                // Get the exact module average from the website display
+                let moduleAverage = '';
+                if (moduleStatus) {
+                    const statusText = moduleStatus.textContent;
+                    const match = statusText.match(/:\s*([\d.]+)/);
+                    if (match) {
+                        moduleAverage = match[1];
+                    }
+                }
+                
                 const moduleStatusText = isValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
 
                 // Draw module result box
@@ -740,8 +552,8 @@ class AcademicManager {
                 
                 // Module status text
                 doc.setFont('helvetica', 'bold');
-                doc.text(`${moduleStatusText}: ${moduleAverage}`, margin, y + 4);
                 doc.setTextColor(isValidated ? 46 : 198, isValidated ? 125 : 40, isValidated ? 50 : 40);
+                doc.text(`${moduleStatusText}: ${moduleAverage}`, margin, y + 4);
                 doc.setTextColor(0, 0, 0);
 
                 y += 25;
