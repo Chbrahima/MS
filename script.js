@@ -443,8 +443,8 @@ class AcademicManager {
                     const subjectAverage = subjectInfo.data.average;
                     // A subject is validated if either:
                     // 1. Its own average is >= 10, or
-                    // 2. The module is validated (compensation)
-                    const status = isModuleValidated || subjectAverage >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
+                    // 2. The module is validated (compensation) AND the subject average is >= 5
+                    const status = (subjectAverage >= 10) || (isModuleValidated && subjectAverage >= 5) ? 'VALIDÉ' : 'RATTRAPAGE';
                     
                     const resultDiv = subjectElement.querySelector('.subject-result');
                     if (resultDiv) {
