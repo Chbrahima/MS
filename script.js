@@ -505,6 +505,9 @@ class AcademicManager {
             overallAverageDiv.className = `general-average ${overallAverage >= 10 ? 'success' : 'failure'}`;
             overallAverageDiv.innerHTML = `
                 <div class="average-value">Moyenne Générale: ${overallAverage.toFixed(2)}</div>
+                <div class="average-message ${overallAverage >= 10 ? 'success' : 'failure'}">
+                    ${overallAverage >= 10 ? '🎉 Congrats 🎉' : '😬 Oops 😬'}
+                </div>
             `;
         }
 
