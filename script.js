@@ -364,7 +364,7 @@ class AcademicManager {
             let totalCoefficients = 0;
             let hasSubjectUnderFive = false;
             
-            subjects.forEach(subject => {
+            subjects.forEach((subject, idx) => {
                 const name = subject.querySelector('.subject-name').value;
                 const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
                 const exam = parseFloat(subject.querySelector('.exam').value) || 0;
@@ -415,21 +415,24 @@ class AcademicManager {
             return;
         }
 
-        // Check if any module has average < 9
+        // Check if any module has average < 9 and if any subject in any module has average < 5
         const hasModuleUnderNine = allModuleAverages.some(mod => mod.average < 9);
+        const hasAnySubjectUnderFive = moduleData.some(mod => mod.hasSubjectUnderFive);
 
         // Now process each module with all conditions
         moduleData.forEach((moduleInfo, moduleIndex) => {
             const module = this.modules[moduleIndex];
             const moduleAverage = moduleInfo.average;
             
-            // A module is validated if:
-            // 1. Its average is >= 9
-            // 2. No subject has average < 5
-            // 3. No other module has average < 9
-            const isModuleValidated = moduleAverage >= 9 && 
-                                    !moduleInfo.hasSubjectUnderFive && 
-                                    !hasModuleUnderNine;
+            // A module is validated if either:
+            // 1. Its average is >= 10, or
+            // 2. Its average is exactly 9 AND:
+            //    a) No other module has average < 9 AND
+            //    b) No subject in any module has average < 5
+            const isModuleValidated = moduleAverage >= 10 || 
+                                    (moduleAverage >= 9 && 
+                                    !hasModuleUnderNine && 
+                                    !hasAnySubjectUnderFive);
 
             const moduleStatus = isModuleValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
 
@@ -472,20 +475,79 @@ class AcademicManager {
 
         // Calculate and display overall average
         if (moduleData.length > 0) {
-            const overallAverage = moduleData.reduce((sum, moduleInfo) => 
-                sum + moduleInfo.average, 0) / moduleData.length;
+            let totalWeightedModuleScores = 0;
+            let totalModuleCredits = 0;
+
+            moduleData.forEach(moduleInfo => {
+                // Calculate total credits (coefficients) for this module
+                const moduleCredits = moduleInfo.subjects.reduce((sum, subject) => 
+                    sum + (subject.data.coefficient || 1), 0);
+                
+                // Add to weighted sum (module average × module total credits)
+                totalWeightedModuleScores += moduleInfo.average * moduleCredits;
+                totalModuleCredits += moduleCredits;
+            });
+
+            // Calculate overall average: sum(module_average × module_credits) / total_credits
+            const overallAverage = totalModuleCredits > 0 ? 
+                totalWeightedModuleScores / totalModuleCredits : 0;
             
             // Create or update overall average display
+            const generalAverageContainer = document.getElementById('general-average-container');
             let overallAverageDiv = document.getElementById('overallAverage');
+            
             if (!overallAverageDiv) {
                 overallAverageDiv = document.createElement('div');
                 overallAverageDiv.id = 'overallAverage';
-                document.getElementById('modulesSection').appendChild(overallAverageDiv);
+                generalAverageContainer.appendChild(overallAverageDiv);
             }
             
-            overallAverageDiv.className = `overall-average ${overallAverage >= 10 ? 'success' : 'failure'}`;
-            overallAverageDiv.innerHTML = `Moyenne Générale: ${overallAverage.toFixed(2)}`;
+            overallAverageDiv.className = `general-average ${overallAverage >= 10 ? 'success' : 'failure'}`;
+            overallAverageDiv.innerHTML = `
+                <div class="average-value">Moyenne Générale: ${overallAverage.toFixed(2)}</div>
+            `;
         }
+
+        // Get general average from the website
+        const overallAverageElement = document.getElementById('overallAverage');
+        if (overallAverageElement) {
+            const generalAverage = parseFloat(overallAverageElement.textContent.match(/[\d.]+/)[0]);
+            const isPassingGeneral = generalAverage >= 10;
+
+            // Draw decorative line
+            doc.setDrawColor(52, 152, 219);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y - 5, doc.internal.pageSize.width - margin, y - 5);
+
+            // Create elegant box for general average
+            doc.setFillColor(236, 240, 241);
+            doc.rect(margin - 2, y, colWidths.reduce((a, b) => a + b, 0) + 4, 20, 'F');
+            
+            // Add general average text with appropriate color
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(isPassingGeneral ? 46 : 198, isPassingGeneral ? 125 : 40, isPassingGeneral ? 50 : 40);
+            doc.text(`Moyenne Générale: ${generalAverage.toFixed(2)}`, doc.internal.pageSize.width / 2, y + 13, { align: 'center' });
+        }
+
+        // Add signature line at the bottom
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(10);
+        doc.setTextColor(128, 128, 128);
+        const signature = "Par CHEIKH BRAHIM ( MS )";
+        doc.text(signature, doc.internal.pageSize.width - margin - doc.getTextWidth(signature), doc.internal.pageSize.height - 20);
+
+        // Add page numbers
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+        }
+
+        doc.save('releve_notes.pdf');
     }
 
     parseGrade(value) {
