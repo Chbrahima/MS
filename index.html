@@ -14,16 +14,105 @@
 <body>
     <div class="container">
         <header>
-            <div class="header-content">
-                <h1><i class="fas fa-graduation-cap"></i> MS</h1>
-                <p class="subtitle">Système de Gestion des Notes</p>
-            </div>
             <button id="darkModeToggle" class="theme-toggle" aria-label="Basculer le mode sombre">
                 <i class="fas fa-moon"></i>
             </button>
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> MS</h1>
+                <p class="subtitle">Système de Gestion des Notes</p>
+                <div class="exam-countdown-container">
+                    <div class="countdown-box s1s3">
+                        <h3>S1 & S3 Examens</h3>
+                        <div class="countdown" id="s1s3Countdown">
+                            <div class="time-block">
+                                <span class="days">--</span>
+                                <label>Jours</label>
+                            </div>
+                            <div class="time-block">
+                                <span class="hours">--</span>
+                                <label>Heures</label>
+                            </div>
+                            <div class="time-block">
+                                <span class="minutes">--</span>
+                                <label>Minutes</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="countdown-box s5">
+                        <h3>S5 Examens</h3>
+                        <div class="countdown" id="s5Countdown">
+                            <div class="time-block">
+                                <span class="days">--</span>
+                                <label>Jours</label>
+                            </div>
+                            <div class="time-block">
+                                <span class="hours">--</span>
+                                <label>Heures</label>
+                            </div>
+                            <div class="time-block">
+                                <span class="minutes">--</span>
+                                <label>Minutes</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
         
         <main>
+            <div class="downloads-section">
+                <h2><i class="fas fa-download"></i> Documents Importants</h2>
+                <div class="downloads-grid">
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Calendrier Annuel</h3>
+                            <p>Planning annuel des cours et examens</p>
+                            <a href="pdfs/calendrier_annuel.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi du temps</h3>
+                            <p>Horaires des cours</p>
+                            <a href="pdfs/emploi_du_temps.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi Devoir</h3>
+                            <p>Horaires des devoirs surveillés</p>
+                            <a href="pdfs/emploi_devoir.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi Exam</h3>
+                            <p>Planning des examens finaux</p>
+                            <a href="pdfs/emploi_exam.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="student-info">
                 <h2><i class="fas fa-user-graduate"></i> Information de l'Étudiant</h2>
                 <div class="input-group">
@@ -58,7 +147,7 @@
                 <!-- Results will be displayed here -->
             </div>
         </main>
-
+        
         <footer>
             <p><i class="far fa-copyright"></i> 2024 Système de Gestion des Notes LMD</p>
             <p>Développé par CHEIKH BRAHIM (MS)</p>
