@@ -837,3 +837,43 @@ input::placeholder {
     color: var(--text-secondary);
     margin-top: 5px;
 }
+
+.general-average {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.average-message {
+    font-size: 1.8em;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.average-message.success {
+    color: var(--success-color);
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+.average-message.failure {
+    color: #c62828;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
