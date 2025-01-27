@@ -651,11 +651,29 @@ class AcademicManager {
                 const moduleElement = document.getElementById(`module${moduleIndex}`);
                 if (!moduleElement) return;
 
-                // Module title with background
-                doc.setFillColor(236, 240, 241);
+                // Get unit color based on module index
+                const getUnitColor = (index) => {
+                    const colors = {
+                        0: { r: 63, g: 81, b: 181 },   // Indigo
+                        1: { r: 0, g: 121, b: 107 },   // Teal
+                        2: { r: 194, g: 24, b: 91 },   // Pink
+                        3: { r: 123, g: 31, b: 162 },  // Purple
+                        4: { r: 216, g: 67, b: 21 },   // Deep Orange
+                        5: { r: 46, g: 125, b: 50 },   // Green
+                        6: { r: 21, g: 101, b: 192 },  // Blue
+                        7: { r: 74, g: 20, b: 140 }    // Deep Purple
+                    };
+                    return colors[index % 8] || colors[0];
+                };
+
+                const unitColor = getUnitColor(moduleIndex);
+
+                // Module title with background using unit color
+                doc.setFillColor(unitColor.r, unitColor.g, unitColor.b);
                 doc.rect(margin - 5, y - 5, doc.internal.pageSize.width - 2 * (margin - 5), 12, 'F');
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(14);
+                doc.setTextColor(255, 255, 255);
                 
                 // Get module name from input
                 const moduleNameInput = moduleElement.querySelector('.module-name');
@@ -663,14 +681,14 @@ class AcademicManager {
                 doc.text(moduleName, margin, y + 3);
                 y += 20;
 
-                // Table headers with modern styling
-                doc.setFillColor(52, 152, 219);
+                // Table headers with unit color styling
+                doc.setFillColor(unitColor.r, unitColor.g, unitColor.b, 0.8);  // Slightly transparent
                 doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
                 
-                let x = margin;
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(10);
                 doc.setTextColor(255, 255, 255);
+                let x = margin;
                 headers.forEach((header, i) => {
                     doc.text(header, x, y + 2);
                     x += colWidths[i];
