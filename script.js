@@ -838,8 +838,82 @@ class AcademicManager {
 window.academicManager = new AcademicManager();
 window.academicManager.initializeEventListeners();
 
-// Dark mode initialization
+// Theme Toggle
 const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    darkModeToggle.innerHTML = newTheme === 'dark' ? 
+        '<i class="fas fa-sun"></i>' : 
+        '<i class="fas fa-moon"></i>';
+});
+
+// Exam countdown functionality
+const examDates = {
+    s1s3: new Date('2025-02-10T00:00:00'),
+    s5: new Date('2025-02-17T00:00:00')
+};
+
+function updateCountdown() {
+    const now = new Date();
+
+    // Update S1 & S3 countdown
+    const s1s3TimeLeft = examDates.s1s3 - now;
+    if (s1s3TimeLeft > 0) {
+        const days = Math.floor(s1s3TimeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((s1s3TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((s1s3TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.querySelector('#s1s3Countdown .days').textContent = days;
+        document.querySelector('#s1s3Countdown .hours').textContent = hours;
+        document.querySelector('#s1s3Countdown .minutes').textContent = minutes;
+    } else {
+        document.querySelector('#s1s3Countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
+    }
+
+    // Update S5 countdown
+    const s5TimeLeft = examDates.s5 - now;
+    if (s5TimeLeft > 0) {
+        const days = Math.floor(s5TimeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((s5TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((s5TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.querySelector('#s5Countdown .days').textContent = days;
+        document.querySelector('#s5Countdown .hours').textContent = hours;
+        document.querySelector('#s5Countdown .minutes').textContent = minutes;
+    } else {
+        document.querySelector('#s5Countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
+    }
+}
+
+// Update countdown every minute
+updateCountdown();
+setInterval(updateCountdown, 60000);
+
+// Add some CSS for when exams have started
+const style = document.createElement('style');
+style.textContent = `
+    .exam-started {
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+`;
+document.head.appendChild(style);
+
+// Dark mode initialization
 const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
 // Check for saved theme preference or use system preference
