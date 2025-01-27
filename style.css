@@ -796,3 +796,44 @@ input::placeholder {
     background-color: #ffebee;
     color: #c62828;
 }
+
+#general-average-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.general-average {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 8px;
+    background-color: var(--card-background);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 10px 0;
+}
+
+.general-average.success {
+    border-left: 4px solid #2e7d32;
+}
+
+.general-average.failure {
+    border-left: 4px solid #c62828;
+}
+
+.average-label {
+    font-size: 1.1em;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.average-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 5px 0;
+}
+
+.credits-info {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
