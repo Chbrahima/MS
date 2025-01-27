@@ -585,12 +585,117 @@ input.error:focus {
 }
 
 .delete-subject {
-    width: 36px;
-    height: 36px;
-    margin-top: 8px;
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
     align-self: flex-end;
-    padding: 8px;
-    border-radius: 4px;
+}
+
+/* Downloads Section Styles */
+.downloads-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: var(--card-background);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.downloads-section h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.downloads-section h2 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.download-card {
+    background: var(--background-light);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.download-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.download-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-icon i {
+    font-size: 24px;
+    color: white;
+}
+
+.download-info {
+    flex: 1;
+}
+
+.download-info h3 {
+    color: var(--text-color);
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.download-info p {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background: var(--primary-dark);
+}
+
+.download-button i {
+    font-size: 1.1em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .downloads-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .download-card {
+        padding: 15px;
+    }
 }
 
 .module-header {
@@ -1036,3 +1141,85 @@ input::placeholder {
 [data-theme="dark"] .module:nth-of-type(6) .module-name { color: #43A047; }
 [data-theme="dark"] .module:nth-of-type(7) .module-name { color: #1E88E5; }
 [data-theme="dark"] .module:nth-of-type(8) .module-name { color: #6A1B9A; }
+
+.exam-countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.countdown-box {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    min-width: 250px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.countdown-box h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: white;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.time-block {
+    text-align: center;
+    min-width: 60px;
+}
+
+.time-block span {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: white;
+    display: block;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.time-block label {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+}
+
+/* Responsive design for countdown */
+@media screen and (max-width: 768px) {
+    .exam-countdown-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .countdown-box {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .countdown-container {
+        margin-top: 15px;
+    }
+
+    .downloads-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .download-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
