@@ -1594,17 +1594,26 @@ input::placeholder {
 
     .time-block {
         min-width: 45px;
+        padding: 0 2px;
     }
 
     .time-block span {
         font-size: 1.4em;
+        margin-bottom: 3px;
     }
 
     .time-block label {
-        font-size: 0.8em;
+        font-size: 0.75em;
+        display: block;
+        line-height: 1.2;
+        word-break: break-word;
+        hyphens: auto;
+        padding: 0 2px;
+        white-space: nowrap;
     }
 
     .countdown {
-        gap: 10px;
+        gap: 8px;
+        align-items: flex-start;
     }
 }
