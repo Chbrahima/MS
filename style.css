@@ -613,11 +613,6 @@ input.error:focus {
     border-bottom: 2px solid var(--border-color);
 }
 
-.downloads-section h2 i {
-    margin-right: 10px;
-    color: var(--primary-color);
-}
-
 .downloads-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1153,6 +1148,8 @@ input::placeholder {
     flex-direction: column;
     gap: 20px;
     margin-top: 20px;
+    align-items: center;
+    width: 100%;
 }
 
 .countdown-box {
@@ -1160,6 +1157,8 @@ input::placeholder {
     border-radius: 15px !important;
     padding: 15px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    width: fit-content;
+    margin: 0 auto;
 }
 
 .countdown-box h3 {
