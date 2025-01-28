@@ -1663,3 +1663,101 @@ input::placeholder {
         gap: 10px;
     }
 }
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+        margin: 25px 0;
+    }
+
+    .countdown-box {
+        width: 85%;
+        padding: 20px;
+        margin: 0;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.2s ease;
+    }
+
+    .countdown-box:hover {
+        transform: translateY(-2px);
+    }
+
+    .countdown-box h3 {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .countdown {
+        gap: 12px;
+        justify-content: center;
+        padding: 5px 0;
+    }
+
+    .time-block {
+        min-width: 65px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 10px 5px;
+        border-radius: 12px;
+        backdrop-filter: blur(5px);
+    }
+
+    .time-block span {
+        font-size: 1.8em;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .time-block label {
+        font-size: 0.75em;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.9;
+        display: block;
+    }
+
+    /* Light mode specific adjustments for mobile */
+    :root:not([data-theme="dark"]) .countdown-box {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    :root:not([data-theme="dark"]) .time-block {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    :root:not([data-theme="dark"]) .time-block span {
+        color: #2c3e50;
+    }
+
+    :root:not([data-theme="dark"]) .time-block label {
+        color: #666;
+    }
+
+    /* Dark mode specific adjustments for mobile */
+    [data-theme="dark"] .countdown-box {
+        background: rgba(30, 30, 30, 0.9);
+    }
+
+    [data-theme="dark"] .time-block {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    [data-theme="dark"] .time-block span {
+        color: #fff;
+    }
+
+    [data-theme="dark"] .time-block label {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
