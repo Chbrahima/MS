@@ -20,6 +20,7 @@
     --unit6-color: #2E7D32;  /* Green */
     --unit7-color: #1565C0;  /* Blue */
     --unit8-color: #4A148C;  /* Deep Purple */
+    transition: background-color 0.3s ease;
 }
 
 [data-theme="dark"] {
@@ -44,6 +45,7 @@
     --unit6-color: #43A047;  /* Lighter Green */
     --unit7-color: #1E88E5;  /* Lighter Blue */
     --unit8-color: #6A1B9A;  /* Lighter Deep Purple */
+    transition: background-color 0.3s ease;
 }
 
 * {
@@ -1152,6 +1154,7 @@ input::placeholder {
     gap: 30px;
     margin-top: 20px;
     flex-wrap: wrap;
+    transition: all 0.3s ease;
 }
 
 .countdown-box {
@@ -1161,6 +1164,7 @@ input::placeholder {
     min-width: 250px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
 }
 
 .countdown-box h3 {
@@ -1168,12 +1172,7 @@ input::placeholder {
     margin-bottom: 10px;
     font-size: 1.2em;
     color: white;
-}
-
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+    transition: color 0.3s ease;
 }
 
 .time-block {
@@ -1187,6 +1186,7 @@ input::placeholder {
     color: white;
     display: block;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
 .time-block label {
@@ -1196,6 +1196,7 @@ input::placeholder {
     display: block;
     margin-top: 2px;
     letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 
 /* Light mode specific styles */
@@ -1836,5 +1837,33 @@ input::placeholder {
     :root:not([data-theme="dark"]) .countdown-box h3,
     [data-theme="dark"] .countdown-box h3 {
         color: white;
+    }
+}
+
+.exam-countdown-container * {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Mobile specific transitions */
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        transition: background-color 0.3s ease,
+                    box-shadow 0.3s ease,
+                    transform 0.3s ease;
+    }
+
+    .countdown-box {
+        transition: background-color 0.3s ease,
+                    border-color 0.3s ease,
+                    box-shadow 0.3s ease;
+    }
+
+    .time-block {
+        transition: background-color 0.3s ease,
+                    color 0.3s ease,
+                    transform 0.3s ease;
     }
 }
