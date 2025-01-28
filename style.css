@@ -1570,3 +1570,41 @@ input::placeholder {
         justify-content: center;
     }
 }
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        flex-direction: row;
+        justify-content: center;
+        gap: 12px;
+        padding: 0 8px;
+        margin-top: 15px;
+    }
+
+    .countdown-box {
+        min-width: 0;
+        width: 49%;
+        padding: 12px;
+        margin: 0;
+    }
+
+    .countdown-box h3 {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+
+    .time-block {
+        min-width: 45px;
+    }
+
+    .time-block span {
+        font-size: 1.4em;
+    }
+
+    .time-block label {
+        font-size: 0.8em;
+    }
+
+    .countdown {
+        gap: 10px;
+    }
+}
