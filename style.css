@@ -1,42 +1,46 @@
 :root {
+    /* Theme Colors */
+    --background-color: #ffffff;
+    --text-color: #333333;
     --primary-color: #2196F3;
     --primary-dark: #1976D2;
-    --success-color: #4CAF50;
-    --success-dark: #388E3C;
-    --background-light: #f8f9fa;
-    --text-color: #333;
-    --background-color: #f4f4f4;
-    --card-background: white;
+    --accent-color: #FF4081;
     --border-color: #e0e0e0;
     --shadow-color: rgba(0, 0, 0, 0.1);
-    /* High-end unit colors */
-    --unit1-color: #3F51B5;  /* Indigo */
-    --unit2-color: #00796B;  /* Teal */
-    --unit3-color: #C2185B;  /* Pink */
-    --unit4-color: #7B1FA2;  /* Purple */
-    --unit5-color: #D84315;  /* Deep Orange */
+    --card-background: #ffffff;
+    --background-light: #f5f5f5;
+    --hover-color: #f0f0f0;
+
+    /* Unit Colors */
+    --unit1-color: #D32F2F;  /* Red */
+    --unit2-color: #C2185B;  /* Pink */
+    --unit3-color: #7B1FA2;  /* Purple */
+    --unit4-color: #512DA8;  /* Deep Purple */
+    --unit5-color: #303F9F;  /* Indigo */
     --unit6-color: #2E7D32;  /* Green */
     --unit7-color: #1565C0;  /* Blue */
     --unit8-color: #4A148C;  /* Deep Purple */
 }
 
 [data-theme="dark"] {
+    /* Theme Colors */
+    --background-color: #1a1a1a;
+    --text-color: #ffffff;
     --primary-color: #64B5F6;
     --primary-dark: #42A5F5;
-    --success-color: #81C784;
-    --success-dark: #66BB6A;
-    --background-light: #2c2c2c;
-    --text-color: #e0e0e0;
-    --background-color: #1a1a1a;
-    --card-background: #2c2c2c;
-    --border-color: #404040;
+    --accent-color: #FF80AB;
+    --border-color: #333333;
     --shadow-color: rgba(0, 0, 0, 0.3);
-    /* High-end unit colors for dark theme - lighter variants */
-    --unit1-color: #5C6BC0;  /* Lighter Indigo */
-    --unit2-color: #26A69A;  /* Lighter Teal */
-    --unit3-color: #E91E63;  /* Lighter Pink */
-    --unit4-color: #9C27B0;  /* Lighter Purple */
-    --unit5-color: #FF5722;  /* Lighter Deep Orange */
+    --card-background: #2d2d2d;
+    --background-light: #252525;
+    --hover-color: #353535;
+
+    /* Unit Colors - Lighter versions for dark mode */
+    --unit1-color: #EF5350;  /* Lighter Red */
+    --unit2-color: #EC407A;  /* Lighter Pink */
+    --unit3-color: #AB47BC;  /* Lighter Purple */
+    --unit4-color: #7E57C2;  /* Lighter Deep Purple */
+    --unit5-color: #5C6BC0;  /* Lighter Indigo */
     --unit6-color: #43A047;  /* Lighter Green */
     --unit7-color: #1E88E5;  /* Lighter Blue */
     --unit8-color: #6A1B9A;  /* Lighter Deep Purple */
@@ -1151,6 +1155,260 @@ input::placeholder {
 }
 
 .countdown-box {
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    border: 1px solid var(--border-color);
+}
+
+/* Light mode styles */
+:root:not([data-theme="dark"]) .countdown-box {
+    background: #ffffff;
+}
+
+:root:not([data-theme="dark"]) .countdown-box .time {
+    color: #000000;
+}
+
+:root:not([data-theme="dark"]) .countdown-box h3,
+:root:not([data-theme="dark"]) .countdown-box .label {
+    color: #333333;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .countdown-box {
+    background: var(--card-background);
+}
+
+[data-theme="dark"] .countdown-box .time,
+[data-theme="dark"] .countdown-box h3,
+[data-theme="dark"] .countdown-box .label {
+    color: #ffffff;
+}
+
+.countdown-box h3 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.countdown-box .time {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.countdown-box .label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .exam-countdown-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .countdown-box {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .countdown-container {
+        margin-top: 15px;
+    }
+
+    .downloads-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .download-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* Countdown styles */
+.countdown-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.countdown-box {
+    background: var(--background-light);
+    padding: 15px 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    border: 1px solid var(--border-color);
+}
+
+:root:not([data-theme="dark"]) .countdown-box {
+    background: #ffffff;
+}
+
+:root:not([data-theme="dark"]) .countdown-box .time {
+    color: #000000 !important;
+}
+
+:root:not([data-theme="dark"]) .countdown-box h3,
+:root:not([data-theme="dark"]) .countdown-box .label {
+    color: #333333;
+}
+
+[data-theme="dark"] .countdown-box {
+    background: var(--card-background);
+}
+
+[data-theme="dark"] .countdown-box .time {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .countdown-box h3,
+[data-theme="dark"] .countdown-box .label {
+    color: #ffffff;
+}
+
+.countdown-box h3 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.countdown-box .time {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.countdown-box .label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .countdown-container {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+        padding: 0 10px;
+    }
+
+    .countdown-box {
+        min-width: 150px;
+        padding: 12px 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .countdown-box {
+        min-width: 140px;
+        font-size: 0.9em;
+    }
+}
+
+/* Downloads section styles */
+.downloads-section {
+    padding: 30px 20px;
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.download-card {
+    background: var(--card-background);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 280px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .countdown-container {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .countdown-box {
+        min-width: 150px;
+        padding: 10px;
+    }
+
+    .downloads-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .download-card {
+        max-width: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .countdown-box {
+        min-width: 140px;
+        font-size: 0.9em;
+    }
+
+    .downloads-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .download-card {
+        padding: 15px;
+    }
+
+    .download-card h3 {
+        font-size: 1em;
+    }
+
+    .download-button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+}
+
+.countdown-box {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 15px;
@@ -1191,35 +1449,203 @@ input::placeholder {
     text-transform: uppercase;
 }
 
-/* Responsive design for countdown */
-@media screen and (max-width: 768px) {
-    .exam-countdown-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .countdown-box {
-        width: 100%;
-        max-width: 300px;
-    }
+/* Light mode specific styles */
+:root:not([data-theme="dark"]) .time-block span {
+    color: #000000;
 }
 
-@media screen and (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
+:root:not([data-theme="dark"]) .countdown-box h3,
+:root:not([data-theme="dark"]) .time-block label {
+    color: #333333;
+}
 
-    .countdown-container {
-        margin-top: 15px;
+:root:not([data-theme="dark"]) .countdown-box {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+}
+
+/* Mobile styles for downloads section */
+@media screen and (max-width: 480px) {
+    .downloads-section {
+        padding: 15px 10px;
+        margin: 10px 5px;
+        width: auto;
+        overflow: hidden;
     }
 
     .downloads-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 0;
+        width: 100%;
     }
 
     .download-card {
         width: 100%;
-        max-width: 300px;
+        max-width: none;
+        padding: 12px;
+        margin: 0;
+    }
+
+    .download-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .download-icon i {
+        font-size: 18px;
+    }
+
+    .download-info h3 {
+        font-size: 0.95em;
+        margin-bottom: 3px;
+    }
+
+    .download-button {
+        padding: 6px 12px;
+        font-size: 0.9em;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .downloads-section {
+        padding: 15px 10px;
+        margin: 10px 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .downloads-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 0;
+        width: 100%;
+        margin: 0;
+    }
+
+    .download-card {
+        width: 100%;
+        max-width: none;
+        padding: 12px;
+        margin: 0;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .download-info {
+        flex: 1;
+        min-width: 0; /* Prevents flex item from overflowing */
+    }
+
+    .download-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+    .download-icon i {
+        font-size: 18px;
+    }
+
+    .download-info h3 {
+        font-size: 0.95em;
+        margin-bottom: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .download-button {
+        padding: 6px 12px;
+        font-size: 0.9em;
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 5px;
+        margin-top: 10px;
+    }
+
+    .countdown-box {
+        min-width: 0;
+        width: 48%;
+        padding: 8px;
+        margin: 0;
+    }
+
+    .countdown-box h3 {
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .time-block {
+        min-width: 40px;
+    }
+
+    .time-block span {
+        font-size: 1.2em;
+    }
+
+    .time-block label {
+        font-size: 0.7em;
+    }
+
+    .countdown {
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 0 5px;
+        margin-top: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .countdown-box {
+        min-width: 0;
+        flex: 1;
+        padding: 8px;
+        margin: 0;
+        max-width: none;
+    }
+
+    .countdown-box h3 {
+        font-size: 0.85em;
+        margin-bottom: 5px;
+        white-space: nowrap;
+    }
+
+    .time-block {
+        min-width: 35px;
+    }
+
+    .time-block span {
+        font-size: 1.1em;
+    }
+
+    .time-block label {
+        font-size: 0.7em;
+    }
+
+    .countdown {
+        gap: 5px;
+        justify-content: center;
     }
 }
