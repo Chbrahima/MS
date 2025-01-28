@@ -1665,3 +1665,20 @@ input::placeholder {
     color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.5px;
 }
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        padding: 0 10px;
+    }
+    
+    .countdown-box {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .countdown {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
