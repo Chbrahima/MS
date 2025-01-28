@@ -838,17 +838,43 @@ class AcademicManager {
 window.academicManager = new AcademicManager();
 window.academicManager.initializeEventListeners();
 
-// Theme Toggle
+// Dark mode functionality
 const darkModeToggle = document.getElementById('darkModeToggle');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Check for saved theme preference or use system preference
+const savedTheme = localStorage.getItem('theme');
+const systemPrefersDark = prefersDarkScheme.matches;
+const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+// Set initial theme
+document.documentElement.setAttribute('data-theme', currentTheme);
+darkModeToggle.innerHTML = currentTheme === 'dark' ? 
+    '<i class="fas fa-sun"></i>' : 
+    '<i class="fas fa-moon"></i>';
+
+// Toggle theme
 darkModeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
     
     darkModeToggle.innerHTML = newTheme === 'dark' ? 
         '<i class="fas fa-sun"></i>' : 
         '<i class="fas fa-moon"></i>';
+});
+
+// Listen for system theme changes
+prefersDarkScheme.addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        darkModeToggle.innerHTML = newTheme === 'dark' ? 
+            '<i class="fas fa-sun"></i>' : 
+            '<i class="fas fa-moon"></i>';
+    }
 });
 
 // Exam countdown functionality
@@ -912,30 +938,3 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-
-// Dark mode initialization
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-// Check for saved theme preference or use system preference
-const currentTheme = localStorage.getItem('theme') || 
-    (prefersDarkScheme.matches ? 'dark' : 'light');
-
-// Set initial theme
-if (currentTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-}
-
-// Theme toggle handler
-darkModeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // Update toggle button icon
-    darkModeToggle.innerHTML = newTheme === 'dark' ? 
-        '<i class="fas fa-sun"></i>' : 
-        '<i class="fas fa-moon"></i>';
-});
