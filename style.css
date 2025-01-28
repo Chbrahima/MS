@@ -1678,6 +1678,36 @@ input::placeholder {
     }
     
     .countdown {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .time-block {
+        min-width: auto !important;
+        padding: 6px !important;
+        font-size: 0.85em !important;
+    }
+
+    .time-block span {
+        font-size: 1em !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        padding: 0 10px;
+    }
+    
+    .countdown-box {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .countdown {
         flex-wrap: wrap;
         justify-content: center;
     }
