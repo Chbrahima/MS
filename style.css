@@ -1412,8 +1412,6 @@ input::placeholder {
     .download-card {
         width: 100%;
         max-width: none;
-        padding: 12px;
-        margin: 0;
     }
 
     .download-icon {
@@ -1759,5 +1757,84 @@ input::placeholder {
 
     [data-theme="dark"] .time-block label {
         color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .exam-countdown-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        margin: 0;
+        background: #2196f3;
+        border-radius: 25px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .countdown-box {
+        width: 100%;
+        padding: 15px;
+        margin: 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .countdown-box h3 {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+        color: white;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .countdown {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .time-block {
+        text-align: center;
+        min-width: 50px;
+    }
+
+    .time-block span {
+        font-size: 1.8em;
+        color: white;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .time-block label {
+        font-size: 0.7em;
+        color: rgba(255, 255, 255, 0.9);
+        text-transform: uppercase;
+        display: block;
+        letter-spacing: 0.5px;
+    }
+
+    /* Remove dark/light mode specific styles for mobile */
+    :root:not([data-theme="dark"]) .countdown-box,
+    [data-theme="dark"] .countdown-box {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    :root:not([data-theme="dark"]) .time-block span,
+    [data-theme="dark"] .time-block span {
+        color: white;
+    }
+
+    :root:not([data-theme="dark"]) .time-block label,
+    [data-theme="dark"] .time-block label {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    :root:not([data-theme="dark"]) .countdown-box h3,
+    [data-theme="dark"] .countdown-box h3 {
+        color: white;
     }
 }
