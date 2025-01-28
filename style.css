@@ -613,6 +613,11 @@ input.error:focus {
     border-bottom: 2px solid var(--border-color);
 }
 
+.downloads-section h2 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
 .downloads-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1150,6 +1155,8 @@ input::placeholder {
     margin-top: 20px;
     align-items: center;
     width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 .countdown-box {
@@ -1157,161 +1164,34 @@ input::placeholder {
     border-radius: 15px !important;
     padding: 15px !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    width: fit-content;
+    width: 100%;
+    max-width: 400px;
     margin: 0 auto;
-}
-
-.countdown-box h3 {
-    text-align: center !important;
-    margin-bottom: 15px !important;
-    font-size: 1.1em !important;
-    color: white !important;
-    font-weight: 500 !important;
-}
-
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.time-block {
-    text-align: center;
-    min-width: 50px;
-    background: rgba(255, 255, 255, 0.2) !important;
-    padding: 12px;
-    border-radius: 12px;
-}
-
-.time-block span {
-    font-size: 1.8em !important;
-    color: white !important;
-    font-weight: 500 !important;
-    display: block;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-}
-
-.time-block label {
-    font-size: 0.7em !important;
-    color: rgba(255, 255, 255, 0.9) !important;
-    text-transform: uppercase;
-    display: block;
-    letter-spacing: 0.5px;
+    box-sizing: border-box;
 }
 
 @media screen and (max-width: 480px) {
     .exam-countdown-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        padding: 20px;
-        margin: 0;
-        background: #2196f3;
-        border-radius: 25px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .countdown-box {
-        width: 100%;
-        margin: 0;
-    }
-}
-
-/* Remove any theme-specific styles */
-:root:not([data-theme="dark"]) .countdown-box,
-:root:not([data-theme="dark"]) .time-block,
-:root:not([data-theme="dark"]) .time-block span,
-:root:not([data-theme="dark"]) .time-block label,
-:root:not([data-theme="dark"]) .countdown-box h3,
-[data-theme="dark"] .countdown-box,
-[data-theme="dark"] .time-block,
-[data-theme="dark"] .time-block span,
-[data-theme="dark"] .time-block label,
-[data-theme="dark"] .countdown-box h3 {
-    /* Override any theme colors */
-    background: none;
-    color: inherit;
-}
-
-/* Downloads section styles */
-.downloads-section {
-    padding: 30px 20px;
-}
-
-.downloads-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    justify-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.download-card {
-    background: var(--card-background);
-    border-radius: 15px;
-    padding: 20px;
-    width: 100%;
-    max-width: 280px;
-    box-shadow: 0 2px 4px var(--shadow-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Media queries for responsive design */
-@media screen and (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .countdown-container {
-        margin-top: 15px;
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        justify-content: center;
-    }
-
-    .countdown-box {
-        min-width: 150px;
-        padding: 10px;
-    }
-
-    .downloads-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
         padding: 0 10px;
     }
-
-    .download-card {
-        max-width: none;
-    }
-}
-
-@media screen and (max-width: 480px) {
+    
     .countdown-box {
-        min-width: 140px;
-        font-size: 0.9em;
+        width: 100%;
+        margin: 0 auto;
     }
-
-    .downloads-grid {
-        grid-template-columns: repeat(2, 1fr);
+    
+    .countdown {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
         gap: 10px;
+        width: 100%;
     }
 
-    .download-card {
-        padding: 15px;
-    }
-
-    .download-card h3 {
-        font-size: 1em;
-    }
-
-    .download-button {
-        padding: 8px 12px;
-        font-size: 0.9em;
+    .time-block {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
     }
 }
 
@@ -1664,51 +1544,4 @@ input::placeholder {
     font-size: 0.7em;
     color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.5px;
-}
-
-@media screen and (max-width: 480px) {
-    .exam-countdown-container {
-        padding: 0 10px;
-    }
-    
-    .countdown-box {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .countdown {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-around;
-        gap: 5px;
-        width: 100%;
-    }
-
-    .time-block {
-        min-width: auto !important;
-        padding: 6px !important;
-        font-size: 0.85em !important;
-    }
-
-    .time-block span {
-        font-size: 1em !important;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .exam-countdown-container {
-        padding: 0 10px;
-    }
-    
-    .countdown-box {
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-    
-    .countdown {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
 }
