@@ -416,13 +416,45 @@ footer {
     transition: transform 0.3s ease;
 }
 
-footer:hover {
-    transform: translateY(-5px);
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
 }
 
-footer p {
-    margin: 0;
-    font-size: 1.1em;
+.admin-link {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.admin-link a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #2196F3;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.admin-link a:hover {
+    color: #1976D2;
+    transform: scale(1.1);
+}
+
+.admin-link i {
+    font-size: 24px;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    margin-top: 40px;
 }
 
 html {
@@ -1200,313 +1232,6 @@ input::placeholder {
     .time-block {
         min-width: auto !important;
         padding: 8px !important;
-    }
-}
-
-.countdown-box.s1s3 {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.countdown-box.s1s3 .time-block {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 12px;
-    border-radius: 12px;
-    min-width: 50px;
-}
-
-.countdown-box.s1s3 .time-block span {
-    font-size: 1.8em;
-    color: white;
-    font-weight: 500;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.countdown-box.s1s3 .time-block label {
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.9);
-    letter-spacing: 0.5px;
-}
-
-.countdown-box.s1s3,
-.countdown-box.s5 {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.countdown-box.s1s3 .time-block,
-.countdown-box.s5 .time-block {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 12px;
-    border-radius: 12px;
-    min-width: 50px;
-}
-
-.countdown-box.s1s3 .time-block span,
-.countdown-box.s5 .time-block span {
-    font-size: 1.8em;
-    color: white;
-    font-weight: 500;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.countdown-box.s1s3 .time-block label,
-.countdown-box.s5 .time-block label {
-    font-size: 0.7em;
-    color: rgba(255, 255, 255, 0.9);
-    letter-spacing: 0.5px;
-}
-
-/* Light mode specific styles */
-:root:not([data-theme="dark"]) .time-block span {
-    color: #000000;
-}
-
-:root:not([data-theme="dark"]) .countdown-box h3,
-:root:not([data-theme="dark"]) .time-block label {
-    color: #333333;
-}
-
-:root:not([data-theme="dark"]) .countdown-box {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-}
-
-/* Mobile styles for downloads section */
-@media screen and (max-width: 480px) {
-    .downloads-section {
-        padding: 15px 10px;
-        margin: 10px 5px;
-        width: auto;
-        overflow: hidden;
-    }
-
-    .downloads-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 0;
-        width: 100%;
-    }
-
-    .download-card {
-        width: 100%;
-        max-width: none;
-    }
-
-    .download-icon {
-        width: 40px;
-        height: 40px;
-    }
-
-    .download-icon i {
-        font-size: 18px;
-    }
-
-    .download-info h3 {
-        font-size: 0.95em;
-        margin-bottom: 3px;
-    }
-
-    .download-button {
-        padding: 6px 12px;
-        font-size: 0.9em;
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .downloads-section {
-        padding: 15px 10px;
-        margin: 10px 0;
-        width: 100%;
-        box-sizing: border-box;
-        overflow: hidden;
-    }
-
-    .downloads-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 0;
-        width: 100%;
-        margin: 0;
-    }
-
-    .download-card {
-        width: 100%;
-        max-width: none;
-        padding: 12px;
-        margin: 0;
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .download-info {
-        flex: 1;
-        min-width: 0; /* Prevents flex item from overflowing */
-    }
-
-    .download-icon {
-        width: 40px;
-        height: 40px;
-        flex-shrink: 0;
-    }
-
-    .download-icon i {
-        font-size: 18px;
-    }
-
-    .download-info h3 {
-        font-size: 0.95em;
-        margin-bottom: 3px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .download-button {
-        padding: 6px 12px;
-        font-size: 0.9em;
-        width: 100%;
-        justify-content: center;
-        box-sizing: border-box;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .exam-countdown-container {
-        flex-direction: row;
-        justify-content: center;
-        gap: 10px;
-        padding: 0 5px;
-        margin-top: 10px;
-    }
-
-    .countdown-box {
-        min-width: 0;
-        width: 48%;
-        padding: 8px;
-        margin: 0;
-    }
-
-    .countdown-box h3 {
-        font-size: 0.9em;
-        margin-bottom: 5px;
-    }
-
-    .time-block {
-        min-width: 40px;
-    }
-
-    .time-block span {
-        font-size: 1.2em;
-    }
-
-    .time-block label {
-        font-size: 0.7em;
-    }
-
-    .countdown {
-        gap: 8px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .exam-countdown-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
-        padding: 20px;
-        margin: 0;
-        background: #2196f3;
-        border-radius: 25px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .countdown-box,
-    .countdown-box.s1s3,
-    .countdown-box.s5 {
-        width: 100%;
-        padding: 15px;
-        margin: 0;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .countdown-box h3 {
-        font-size: 1.1em;
-        margin-bottom: 15px;
-        color: white;
-        text-align: center;
-        font-weight: 500;
-    }
-
-    .countdown {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-    }
-
-    .time-block {
-        text-align: center;
-        min-width: 50px;
-        background: rgba(255, 255, 255, 0.2);
-        padding: 12px;
-        border-radius: 12px;
-    }
-
-    .time-block span {
-        font-size: 1.8em;
-        color: white;
-        font-weight: 500;
-        display: block;
-        margin-bottom: 5px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .time-block label {
-        font-size: 0.7em;
-        color: rgba(255, 255, 255, 0.9);
-        text-transform: uppercase;
-        display: block;
-        letter-spacing: 0.5px;
-    }
-
-    /* Override any theme-specific styles */
-    :root:not([data-theme="dark"]) .countdown-box,
-    [data-theme="dark"] .countdown-box {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    :root:not([data-theme="dark"]) .time-block,
-    [data-theme="dark"] .time-block {
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    :root:not([data-theme="dark"]) .time-block span,
-    [data-theme="dark"] .time-block span {
-        color: white;
-    }
-
-    :root:not([data-theme="dark"]) .time-block label,
-    [data-theme="dark"] .time-block label {
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    :root:not([data-theme="dark"]) .countdown-box h3,
-    [data-theme="dark"] .countdown-box h3 {
-        color: white;
     }
 }
 

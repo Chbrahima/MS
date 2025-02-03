@@ -7,11 +7,16 @@
     <meta name="theme-color" content="#2196F3">
     <title>Calculateur de Moyenne LMD</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+    <div class="admin-link">
+        <a href="admin/login.html" title="Administration">
+            <i class="fas fa-user-shield"></i>
+        </a>
+    </div>
     <div class="container">
         <header class="header">
             <div class="header-content">
@@ -27,15 +32,15 @@
                         <h3>S1 & S3 Examens</h3>
                         <div class="countdown" id="s1s3Countdown">
                             <div class="time-block">
-                                <span class="days">--</span>
+                                <span>--</span>
                                 <label>Jours</label>
                             </div>
                             <div class="time-block">
-                                <span class="hours">--</span>
+                                <span>--</span>
                                 <label>Heures</label>
                             </div>
                             <div class="time-block">
-                                <span class="minutes">--</span>
+                                <span>--</span>
                                 <label>Minutes</label>
                             </div>
                         </div>
@@ -44,15 +49,15 @@
                         <h3>S5 Examens</h3>
                         <div class="countdown" id="s5Countdown">
                             <div class="time-block">
-                                <span class="days">--</span>
+                                <span>--</span>
                                 <label>Jours</label>
                             </div>
                             <div class="time-block">
-                                <span class="hours">--</span>
+                                <span>--</span>
                                 <label>Heures</label>
                             </div>
                             <div class="time-block">
-                                <span class="minutes">--</span>
+                                <span>--</span>
                                 <label>Minutes</label>
                             </div>
                         </div>
@@ -146,9 +151,8 @@
             </div>
         </main>
         
-        <footer>
-            <p><i class="far fa-copyright"></i> 2024 Système de Gestion des Notes LMD</p>
-            <p>Développé par CHEIKH BRAHIM (MS)</p>
+        <footer class="footer">
+            <p>&copy; développer par cheikh brahim Ahmedou (MS). Tous droits réservés.</p>
         </footer>
     </div>
 
