@@ -85,7 +85,6 @@ class AcademicManager {
         document.getElementById('addModule').addEventListener('click', () => this.addModule());
         document.getElementById('calculateAll').addEventListener('click', () => this.calculateAllModules());
         document.getElementById('generatePDF').addEventListener('click', () => this.generatePDF());
-        document.getElementById('darkModeToggle').addEventListener('click', () => this.toggleDarkMode());
     }
 
     addModule() {
@@ -834,309 +833,91 @@ class AcademicManager {
     }
 }
 
-// Create a download card element
-function createDownloadCard(title, path, icon) {
-    // Ensure path starts with pdfs/
-    const cleanPath = path.replace(/^\.\.\//, '');
-    const finalPath = cleanPath.startsWith('pdfs/') ? cleanPath : 'pdfs/' + cleanPath;
-    
-    const card = document.createElement('div');
-    card.className = 'download-card';
-    card.innerHTML = `
-        <div class="download-icon">
-            <i class="fas fa-${icon}"></i>
-        </div>
-        <div class="download-info">
-            <h3>${title}</h3>
-            <a href="${finalPath}" class="download-button" download>
-                <i class="fas fa-file-pdf"></i> Télécharger
-            </a>
-        </div>
-    `;
-    return card;
-}
-
-// Load custom titles and update PDF links
-function loadCustomTitles() {
-    const downloadGrid = document.querySelector('.downloads-grid');
-    if (!downloadGrid) return;
-    
-    // Get all saved PDFs
-    const savedPdfs = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.endsWith('PdfPath')) {
-            const title = localStorage.getItem(key.replace('PdfPath', 'Title'));
-            const path = localStorage.getItem(key);
-            if (title && path) {
-                // Clean the path
-                const cleanPath = path.replace(/^\.\.\//, '');
-                savedPdfs.push({ 
-                    title, 
-                    path: cleanPath.startsWith('pdfs/') ? cleanPath : 'pdfs/' + cleanPath 
-                });
-            }
-        }
-    }
-    
-    // Clear existing cards
-    downloadGrid.innerHTML = '';
-    
-    // Default PDFs
-    const defaultPdfs = [
-        {
-            id: 'annual',
-            defaultTitle: 'Calendrier Annuel',
-            icon: 'calendar',
-            path: 'pdfs/calendrier_annuel.pdf'
-        },
-        {
-            id: 'schedule',
-            defaultTitle: 'Emploi du temps',
-            icon: 'clock',
-            path: 'pdfs/emploi_du_temps.pdf'
-        },
-        {
-            id: 'devoir',
-            defaultTitle: 'Emploi Devoir',
-            icon: 'clock',
-            path: 'pdfs/emploi_devoir.pdf'
-        },
-        {
-            id: 'exam',
-            defaultTitle: 'Emploi Exam',
-            icon: 'clock',
-            path: 'pdfs/emploi_exam.pdf'
-        }
-    ];
-    
-    // Add default PDFs with custom titles
-    for (const pdf of defaultPdfs) {
-        const customTitle = localStorage.getItem(`${pdf.id}Title`);
-        const card = createDownloadCard(customTitle || pdf.defaultTitle, pdf.path, pdf.icon);
-        downloadGrid.appendChild(card);
-    }
-    
-    // Add custom PDFs
-    for (const pdf of savedPdfs) {
-        if (!defaultPdfs.some(d => d.path === pdf.path)) {
-            const card = createDownloadCard(pdf.title, pdf.path, 'file-pdf');
-            downloadGrid.appendChild(card);
-        }
-    }
-    
-    // Update timer titles
-    const s1s3Title = localStorage.getItem('s1s3Title') || 'S1 & S3 Examens';
-    const s5Title = localStorage.getItem('s5Title') || 'S5 Examens';
-    
-    const s1s3TitleElement = document.querySelector('.countdown-box.s1s3 h3');
-    const s5TitleElement = document.querySelector('.countdown-box.s5 h3');
-    
-    if (s1s3TitleElement) s1s3TitleElement.textContent = s1s3Title;
-    if (s5TitleElement) s5TitleElement.textContent = s5Title;
-}
-
 // Set initial exam dates
 const s1s3ExamDate = new Date('2025-02-10T00:00:00');
 const s5ExamDate = new Date('2025-02-17T00:00:00');
 
-// Store dates in localStorage if not already set
-if (!localStorage.getItem('s1s3ExamDate')) {
-    localStorage.setItem('s1s3ExamDate', s1s3ExamDate.toISOString());
-}
-if (!localStorage.getItem('s5ExamDate')) {
-    localStorage.setItem('s5ExamDate', s5ExamDate.toISOString());
-}
-
 // Countdown functionality
 function updateCountdown() {
-    const s1s3Date = localStorage.getItem('s1s3ExamDate');
-    const s5Date = localStorage.getItem('s5ExamDate');
-    
-    if (!s1s3Date && !s5Date) return;
-    
     const now = new Date();
     
     // Update S1/S3 countdown
-    if (s1s3Date) {
-        const target = new Date(s1s3Date);
-        const timeLeft = target - now;
-        
-        const s1s3Box = document.querySelector('.countdown-box.s1s3');
-        if (s1s3Box) {
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                
-                const spans = s1s3Box.querySelectorAll('.time-block span');
-                if (spans.length === 3) {
-                    spans[0].textContent = days;
-                    spans[1].textContent = hours;
-                    spans[2].textContent = minutes;
-                }
-            } else {
-                s1s3Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
+    const s1s3TimeLeft = s1s3ExamDate - now;
+    const s1s3Box = document.querySelector('.countdown-box.s1s3');
+    if (s1s3Box) {
+        if (s1s3TimeLeft > 0) {
+            const days = Math.floor(s1s3TimeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((s1s3TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((s1s3TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            
+            const spans = s1s3Box.querySelectorAll('.time-block span');
+            if (spans.length === 3) {
+                spans[0].textContent = days;
+                spans[1].textContent = hours;
+                spans[2].textContent = minutes;
             }
+        } else {
+            s1s3Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
         }
     }
     
     // Update S5 countdown
-    if (s5Date) {
-        const target = new Date(s5Date);
-        const timeLeft = target - now;
-        
-        const s5Box = document.querySelector('.countdown-box.s5');
-        if (s5Box) {
-            if (timeLeft > 0) {
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                
-                const spans = s5Box.querySelectorAll('.time-block span');
-                if (spans.length === 3) {
-                    spans[0].textContent = days;
-                    spans[1].textContent = hours;
-                    spans[2].textContent = minutes;
-                }
-            } else {
-                s5Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
+    const s5TimeLeft = s5ExamDate - now;
+    const s5Box = document.querySelector('.countdown-box.s5');
+    if (s5Box) {
+        if (s5TimeLeft > 0) {
+            const days = Math.floor(s5TimeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((s5TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((s5TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            
+            const spans = s5Box.querySelectorAll('.time-block span');
+            if (spans.length === 3) {
+                spans[0].textContent = days;
+                spans[1].textContent = hours;
+                spans[2].textContent = minutes;
             }
+        } else {
+            s5Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
         }
     }
 }
-
-// Load custom titles and update PDF links
-function loadCustomTitles() {
-    const downloadGrid = document.querySelector('.downloads-grid');
-    if (!downloadGrid) return;
-    
-    // Get all saved PDFs
-    const savedPdfs = [];
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.endsWith('PdfPath')) {
-            const title = localStorage.getItem(key.replace('PdfPath', 'Title'));
-            const path = localStorage.getItem(key);
-            if (title && path) {
-                // Clean the path
-                const cleanPath = path.replace(/^\.\.\//, '');
-                savedPdfs.push({ 
-                    title, 
-                    path: cleanPath.startsWith('pdfs/') ? cleanPath : 'pdfs/' + cleanPath 
-                });
-            }
-        }
-    }
-    
-    // Clear existing cards
-    downloadGrid.innerHTML = '';
-    
-    // Default PDFs
-    const defaultPdfs = [
-        {
-            id: 'annual',
-            defaultTitle: 'Calendrier Annuel',
-            icon: 'calendar',
-            path: 'pdfs/calendrier_annuel.pdf'
-        },
-        {
-            id: 'schedule',
-            defaultTitle: 'Emploi du temps',
-            icon: 'clock',
-            path: 'pdfs/emploi_du_temps.pdf'
-        },
-        {
-            id: 'devoir',
-            defaultTitle: 'Emploi Devoir',
-            icon: 'clock',
-            path: 'pdfs/emploi_devoir.pdf'
-        },
-        {
-            id: 'exam',
-            defaultTitle: 'Emploi Exam',
-            icon: 'clock',
-            path: 'pdfs/emploi_exam.pdf'
-        }
-    ];
-    
-    // Add default PDFs with custom titles
-    for (const pdf of defaultPdfs) {
-        const customTitle = localStorage.getItem(`${pdf.id}Title`);
-        const card = createDownloadCard(customTitle || pdf.defaultTitle, pdf.path, pdf.icon);
-        downloadGrid.appendChild(card);
-    }
-    
-    // Add custom PDFs
-    for (const pdf of savedPdfs) {
-        if (!defaultPdfs.some(d => d.path === pdf.path)) {
-            const card = createDownloadCard(pdf.title, pdf.path, 'file-pdf');
-            downloadGrid.appendChild(card);
-        }
-    }
-    
-    // Update timer titles
-    const s1s3Title = localStorage.getItem('s1s3Title') || 'S1 & S3 Examens';
-    const s5Title = localStorage.getItem('s5Title') || 'S5 Examens';
-    
-    const s1s3TitleElement = document.querySelector('.countdown-box.s1s3 h3');
-    const s5TitleElement = document.querySelector('.countdown-box.s5 h3');
-    
-    if (s1s3TitleElement) s1s3TitleElement.textContent = s1s3Title;
-    if (s5TitleElement) s5TitleElement.textContent = s5Title;
-}
-
-// Start countdown timer
-document.addEventListener('DOMContentLoaded', function() {
-    loadCustomTitles();
-    updateCountdown();
-    setInterval(updateCountdown, 60000); // Update every minute instead of every second
-});
-
-// Load saved dates on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updateCountdown();
-});
-
-// Initialize the application
-window.academicManager = new AcademicManager();
-window.academicManager.initializeEventListeners();
 
 // Dark mode functionality
-const darkModeToggle = document.getElementById('darkModeToggle');
-const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+function initializeDarkMode() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    if (!darkModeToggle) return;
 
-// Check for saved theme preference or use system preference
-const savedTheme = localStorage.getItem('theme');
-const systemPrefersDark = prefersDarkScheme.matches;
-const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
-
-// Set initial theme
-document.documentElement.setAttribute('data-theme', currentTheme);
-darkModeToggle.innerHTML = currentTheme === 'dark' ? 
-    '<i class="fas fa-sun"></i>' : 
-    '<i class="fas fa-moon"></i>';
-
-// Toggle theme
-darkModeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    darkModeToggle.innerHTML = newTheme === 'dark' ? 
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    darkModeToggle.innerHTML = savedTheme === 'dark' ? 
         '<i class="fas fa-sun"></i>' : 
         '<i class="fas fa-moon"></i>';
-});
 
-// Listen for system theme changes
-prefersDarkScheme.addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-        const newTheme = e.matches ? 'dark' : 'light';
+    // Toggle theme
+    darkModeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
         document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
         darkModeToggle.innerHTML = newTheme === 'dark' ? 
             '<i class="fas fa-sun"></i>' : 
             '<i class="fas fa-moon"></i>';
-    }
+    });
+}
+
+// Initialize everything when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Start the countdown timer
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+    
+    // Initialize dark mode
+    initializeDarkMode();
+    
+    // Initialize the academic manager
+    const manager = new AcademicManager();
+    manager.initializeEventListeners();
 });
