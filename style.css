@@ -1335,6 +1335,22 @@ input::placeholder {
     }
 }
 
+@media screen and (max-width: 480px) {
+    .exam-countdown-container .countdown-box .time-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .exam-countdown-container .countdown-box .time-block span {
+        margin-bottom: 5px;
+    }
+
+    .exam-countdown-container .countdown-box .time-block label {
+        text-align: center;
+    }
+}
+
 /* Authentication Styles */
 .auth-container {
     display: flex;
