@@ -1422,12 +1422,17 @@ input::placeholder {
     }
 
     .social-links {
-        gap: 15px;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
     }
 
     .social-icon {
         width: 50px;
         height: 50px;
+        margin: 0 5px;
     }
 
     .social-icon i {
@@ -1506,14 +1511,17 @@ html, body {
     }
 
     .social-links {
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: center;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
+        flex-wrap: wrap;
     }
 
     .social-icon {
         width: 50px;
         height: 50px;
+        margin: 0 5px;
     }
 
     .footer {
