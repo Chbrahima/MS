@@ -1,923 +1,1609 @@
-class Module {
-    constructor(name = '') {
-        this.name = name;
-        this.subjects = [];
-        this.average = 0;
-        this.status = '';
+:root {
+    /* Theme Colors */
+    --background-color: #f4f7f6;
+    --text-color: #2c3e50;
+    --primary-color: #3498db;
+    --primary-dark: #2f6aad;
+    --accent-color: #e74c3c;
+    --border-color: #e0e6ed;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --card-background: #ffffff;
+    --background-light: #f5f5f5;
+    --hover-color: #f0f0f0;
+
+    /* Unit Colors */
+    --unit1-color: #D32F2F;  /* Red */
+    --unit2-color: #C2185B;  /* Pink */
+    --unit3-color: #7B1FA2;  /* Purple */
+    --unit4-color: #512DA8;  /* Deep Purple */
+    --unit5-color: #303F9F;  /* Indigo */
+    --unit6-color: #2E7D32;  /* Green */
+    --unit7-color: #1565C0;  /* Blue */
+    --unit8-color: #4A148C;  /* Deep Purple */
+    transition: background-color 0.3s ease;
+}
+
+[data-theme="dark"] {
+    /* Theme Colors */
+    --background-color: #1a1a1a;
+    --text-color: #ffffff;
+    --primary-color: #64B5F6;
+    --primary-dark: #42A5F5;
+    --accent-color: #FF80AB;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --card-background: #2d2d2d;
+    --background-light: #252525;
+    --hover-color: #353535;
+
+    /* Unit Colors - Lighter versions for dark mode */
+    --unit1-color: #EF5350;  /* Lighter Red */
+    --unit2-color: #EC407A;  /* Lighter Pink */
+    --unit3-color: #AB47BC;  /* Lighter Purple */
+    --unit4-color: #7E57C2;  /* Lighter Deep Purple */
+    --unit5-color: #5C6BC0;  /* Lighter Indigo */
+    --unit6-color: #43A047;  /* Lighter Green */
+    --unit7-color: #1E88E5;  /* Lighter Blue */
+    --unit8-color: #6A1B9A;  /* Lighter Deep Purple */
+    transition: background-color 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--card-background);
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border-radius: 12px;
+}
+
+main {
+    margin-top: 20px;
+}
+
+.modules-container {
+    margin-top: 20px;
+    overflow-x: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    padding: 30px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    flex: 1;
+    text-align: center;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+header:hover {
+    transform: translateY(-5px);
+}
+
+header .subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 5px;
+    font-weight: 300;
+}
+
+.title h1 {
+    font-size: 3em;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.title h1 i {
+    font-size: 1em;
+    margin-right: 10px;
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .title h1 {
+        font-size: 2.5em;
     }
 
-    addSubject(subject) {
-        this.subjects.push(subject);
-    }
-
-    calculateAverage() {
-        if (this.subjects.length === 0) return 0;
-        
-        let totalWeightedScore = 0;
-        let totalCoefficients = 0;
-        
-        this.subjects.forEach(subject => {
-            if (subject.isValid()) {
-                const subjectAverage = subject.calculateAverage();
-                const coefficient = parseFloat(subject.coefficient);
-                totalWeightedScore += subjectAverage * coefficient;
-                totalCoefficients += coefficient;
-            }
-        });
-        
-        if (totalCoefficients === 0) return 0;
-        
-        this.average = Number((totalWeightedScore / totalCoefficients).toFixed(2));
-        return this.average;
-    }
-
-    isValid() {
-        return this.name && this.subjects.length > 0 && 
-               this.subjects.every(subject => subject.isValid());
+    .title h1 i {
+        font-size: 1.2em;
     }
 }
 
-class Subject {
-    constructor(name = '', exam = '', devoir = '', coefficient = '') {
-        this.name = name;
-        this.exam = exam;
-        this.devoir = devoir;
-        this.coefficient = coefficient;
-        this.average = 0;
-        this.status = '';
+@media screen and (max-width: 480px) {
+    .title h1 {
+        font-size: 2em;
     }
 
-    calculateAverage() {
-        if (!this.exam || !this.devoir || !this.coefficient) {
-            this.average = 0;
-            return 0;
-        }
-        
-        const examGrade = parseFloat(this.exam);
-        const devoirGrade = parseFloat(this.devoir);
-        
-        if (isNaN(examGrade) || isNaN(devoirGrade)) {
-            this.average = 0;
-            return 0;
-        }
-        
-        this.average = (examGrade * 0.6 + devoirGrade * 0.4);
-        return this.average;
-    }
-
-    isValid() {
-        return this.name && 
-               this.exam !== '' && 
-               this.devoir !== '' && 
-               this.coefficient !== '' &&
-               !isNaN(this.exam) && 
-               !isNaN(this.devoir) && 
-               !isNaN(this.coefficient);
+    .title h1 i {
+        font-size: 1.5em;
     }
 }
 
-class AcademicManager {
-    constructor() {
-        this.modules = [];
-    }
-
-    initializeEventListeners() {
-        document.getElementById('addModule').addEventListener('click', () => this.addModule());
-        document.getElementById('calculateAll').addEventListener('click', () => this.calculateAllModules());
-        document.getElementById('generatePDF').addEventListener('click', () => this.generatePDF());
-    }
-
-    addModule() {
-        const moduleIndex = this.modules.length;
-        const moduleDiv = document.createElement('div');
-        moduleDiv.className = 'module';
-        moduleDiv.id = `module${moduleIndex}`;
-
-        const moduleNameInput = document.createElement('input');
-        moduleNameInput.type = 'text';
-        moduleNameInput.className = 'module-name';
-        moduleNameInput.placeholder = `Module ${moduleIndex + 1}`;
-        
-        // Create new module instance
-        const newModule = new Module();
-        
-        // Update module name when input changes
-        moduleNameInput.addEventListener('input', (e) => {
-            newModule.name = e.target.value || `Module ${moduleIndex + 1}`;
-        });
-        
-        // Store initial name
-        newModule.name = `Module ${moduleIndex + 1}`;
-
-        moduleDiv.innerHTML += `
-            <div class="module-header">
-                <i class="fas fa-trash-alt delete-module" title="Supprimer le module"></i>
-            </div>
-            <div class="subjects"></div>
-            <button class="btn add-subject">Ajouter une Matière</button>
-            <div class="module-result">
-                <!-- Module results will be displayed here -->
-            </div>
-        `;
-
-        // Move the name input into the header after setting innerHTML
-        const header = moduleDiv.querySelector('.module-header');
-        header.insertBefore(moduleNameInput, header.firstChild);
-
-        document.getElementById('modulesSection').appendChild(moduleDiv);
-
-        // Add event listener for delete module icon
-        moduleDiv.querySelector('.delete-module').addEventListener('click', () => {
-            this.deleteModule(moduleIndex);
-        });
-
-        moduleDiv.querySelector('.add-subject').addEventListener('click', () => {
-            this.addSubject(moduleIndex);
-        });
-
-        this.modules.push(newModule);
-    }
-
-    deleteModule(moduleIndex) {
-        this.modules.splice(moduleIndex, 1);
-        const moduleElement = document.getElementById(`module${moduleIndex}`);
-        moduleElement.remove();
-        
-        // Renumber remaining modules
-        for (let i = moduleIndex; i < this.modules.length; i++) {
-            const element = document.getElementById(`module${i + 1}`);
-            if (element) {
-                element.id = `module${i}`;
-            }
-        }
-    }
-
-    addSubject(moduleIndex) {
-        const subjectsContainer = document.querySelector(`#module${moduleIndex} .subjects`);
-        const subjectDiv = document.createElement('div');
-        subjectDiv.className = 'subject';
-        
-        subjectDiv.innerHTML = `
-            <div class="subject-inputs">
-                <div class="input-group">
-                    <input type="text" class="subject-name" placeholder="Nom de la matière">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="devoir" placeholder="Note du Devoir"
-                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="exam" placeholder="Note Examen" 
-                           oninput="this.value = this.value.replace(/[^0-9,\.]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="coefficient" placeholder="Crédit"
-                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                    <span class="error-message"></span>
-                </div>
-            </div>
-            <div class="subject-result">
-                <span class="subject-average"></span>
-                <span class="subject-status"></span>
-            </div>
-            <i class="fas fa-trash-alt delete-subject" title="Supprimer la matière"></i>
-        `;
-
-        subjectsContainer.appendChild(subjectDiv);
-
-        // Add delete subject event listener
-        const deleteButton = subjectDiv.querySelector('.delete-subject');
-        deleteButton.addEventListener('click', () => {
-            subjectDiv.remove();
-            this.calculateModuleAverage(moduleIndex);
-        });
-
-        // Add grade input restrictions
-        const gradeInputs = subjectDiv.querySelectorAll('.exam, .devoir');
-        gradeInputs.forEach(input => {
-            input.addEventListener('keydown', (e) => {
-                // Allow: backspace, delete, tab, escape, enter
-                if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
-                    // Allow: Ctrl+A
-                    (e.keyCode === 65 && e.ctrlKey === true) ||
-                    // Allow: home, end, left, right
-                    (e.keyCode >= 35 && e.keyCode <= 39) ||
-                    // Allow decimal point
-                    (e.keyCode === 190 || e.keyCode === 110)) {
-                    return;
-                }
-                // Ensure that it is a number and stop the keypress if not
-                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) &&
-                    (e.keyCode < 96 || e.keyCode > 105)) {
-                    e.preventDefault();
-                }
-            });
-
-            input.addEventListener('input', (e) => {
-                let value = parseFloat(e.target.value.replace(',', '.'));
-                if (isNaN(value)) return;
-                
-                if (value > 20) {
-                    e.target.value = '20';
-                    this.showWarning(input, 'La note maximale est 20');
-                } else if (value < 0) {
-                    e.target.value = '0';
-                    this.showWarning(input, 'La note minimale est 0');
-                }
-            });
-
-            // Prevent paste of invalid values
-            input.addEventListener('paste', (e) => {
-                const pastedData = e.clipboardData.getData('text');
-                const value = parseFloat(pastedData.replace(',', '.'));
-                if (isNaN(value) || value < 0 || value > 20) {
-                    e.preventDefault();
-                    this.showWarning(input, 'Veuillez coller une note valide entre 0 et 20');
-                }
-            });
-        });
-
-        // Add input validation
-        const inputs = subjectDiv.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
-                this.validateAndUpdateSubject(subjectDiv, moduleIndex);
-            });
-
-            input.addEventListener('blur', () => {
-                this.validateAndUpdateSubject(subjectDiv, moduleIndex);
-            });
-        });
-    }
-
-    showWarning(input, message) {
-        const errorSpan = input.parentElement.querySelector('.error-message');
-        if (errorSpan) {
-            errorSpan.textContent = message;
-            setTimeout(() => {
-                errorSpan.textContent = '';
-            }, 3000);
-        }
-    }
-
-    validateAndUpdateSubject(subjectDiv, moduleIndex) {
-        const nameInput = subjectDiv.querySelector('.subject-name');
-        const examInput = subjectDiv.querySelector('.exam');
-        const devoirInput = subjectDiv.querySelector('.devoir');
-        const coefficientInput = subjectDiv.querySelector('.coefficient');
-        const resultDiv = subjectDiv.querySelector('.subject-result');
-
-        // Validate inputs
-        const name = nameInput.value.trim();
-        const exam = parseFloat(examInput.value.replace(',', '.')) || 0;
-        const devoir = parseFloat(devoirInput.value.replace(',', '.')) || 0;
-        const coefficient = parseInt(coefficientInput.value) || 0;
-
-        // Show/hide error messages
-        this.validateField(nameInput, name, 'Le nom de la matière est requis', 'empty');
-        this.validateField(examInput, exam, 'La note maximale est 20', 'grade');
-        this.validateField(devoirInput, devoir, 'La note maximale est 20', 'grade');
-        this.validateField(coefficientInput, coefficient, 'Le crédit est requis', 'empty');
-
-        // Calculate and display average if all inputs are valid
-        if (name && exam >= 0 && exam <= 20 && devoir >= 0 && devoir <= 20 && coefficient > 0) {
-            const average = (exam * 0.6 + devoir * 0.4).toFixed(2);
-            const status = average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE';
-            
-            const averageSpan = resultDiv.querySelector('.subject-average');
-            const statusSpan = resultDiv.querySelector('.subject-status');
-            
-            if (averageSpan && statusSpan) {
-                averageSpan.textContent = `${average}/20`;
-                statusSpan.textContent = status;
-                statusSpan.className = 'subject-status ' + (status === 'VALIDÉ' ? 'success' : 'failure');
-            }
-        }
-
-        // Update module average
-        this.calculateModuleAverage(moduleIndex);
-    }
-
-    validateField(input, value, errorMessage, type) {
-        const errorSpan = input.parentElement.querySelector('.error-message');
-        if (errorSpan) {
-            if (type === 'grade') {
-                // Only show error for grades if value is greater than 20
-                if (value > 20) {
-                    errorSpan.textContent = errorMessage;
-                    input.classList.add('error');
-                } else {
-                    errorSpan.textContent = '';
-                    input.classList.remove('error');
-                }
-            } else if (type === 'empty') {
-                // Only show error for empty required fields
-                if (!value) {
-                    errorSpan.textContent = errorMessage;
-                    input.classList.add('error');
-                } else {
-                    errorSpan.textContent = '';
-                    input.classList.remove('error');
-                }
-            }
-        }
-    }
-
-    deleteSubject(moduleIndex, subjectIndex) {
-        const module = this.modules[moduleIndex];
-        module.subjects.splice(subjectIndex, 1);
-        const subjectsContainer = document.querySelector(`#module${moduleIndex} .subjects`);
-        subjectsContainer.children[subjectIndex].remove();
-    }
-
-    updateModuleDisplay(moduleIndex) {
-        const module = this.modules[moduleIndex];
-        const moduleElement = document.getElementById(`module${moduleIndex}`);
-        if (!moduleElement || !module) return;
-
-        module.calculateAverage();
-
-        // Update module average and status
-        const moduleResult = moduleElement.querySelector('.module-result');
-        const averageElement = moduleResult.querySelector('.module-average');
-        averageElement.textContent = `Moyenne: ${module.average.toFixed(2)}/20`;
-
-        // Calculate overall average
-        this.calculateOverallAverage();
-    }
-
-    calculateAllModules() {
-        let hasValidInput = true;
-        let moduleData = [];
-        let allModuleAverages = [];
-        
-        // First collect all the data and calculate module averages
-        this.modules.forEach((module, moduleIndex) => {
-            const moduleElement = document.getElementById(`module${moduleIndex}`);
-            const subjects = moduleElement.querySelectorAll('.subject');
-            let moduleSubjects = [];
-            let totalWeightedScore = 0;
-            let totalCoefficients = 0;
-            let hasSubjectUnderFive = false;
-            
-            subjects.forEach((subject, idx) => {
-                const name = subject.querySelector('.subject-name').value;
-                const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
-                const exam = parseFloat(subject.querySelector('.exam').value) || 0;
-                const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
-
-                if (isNaN(devoir) || isNaN(exam)) {
-                    hasValidInput = false;
-                    return;
-                }
-
-                const subjectAverage = (exam * 0.6 + devoir * 0.4);
-                if (subjectAverage < 5) {
-                    hasSubjectUnderFive = true;
-                }
-
-                totalWeightedScore += subjectAverage * coefficient;
-                totalCoefficients += coefficient;
-
-                moduleSubjects.push({
-                    element: subject,
-                    data: {
-                        name: name,
-                        devoir: devoir,
-                        exam: exam,
-                        coefficient: coefficient,
-                        average: subjectAverage
-                    }
-                });
-            });
-
-            const moduleAverage = totalCoefficients > 0 ? totalWeightedScore / totalCoefficients : 0;
-            allModuleAverages.push({
-                index: moduleIndex,
-                average: moduleAverage,
-                hasSubjectUnderFive: hasSubjectUnderFive
-            });
-
-            moduleData.push({
-                element: moduleElement,
-                subjects: moduleSubjects,
-                average: moduleAverage,
-                hasSubjectUnderFive: hasSubjectUnderFive
-            });
-        });
-
-        if (!hasValidInput) {
-            alert('Veuillez remplir toutes les notes avant de calculer.');
-            return;
-        }
-
-        // Check if any module has average < 9 and if any subject in any module has average < 5
-        const hasModuleUnderNine = allModuleAverages.some(mod => mod.average < 9);
-        const hasAnySubjectUnderFive = moduleData.some(mod => mod.hasSubjectUnderFive);
-
-        // Now process each module with all conditions
-        moduleData.forEach((moduleInfo, moduleIndex) => {
-            const module = this.modules[moduleIndex];
-            const moduleAverage = moduleInfo.average;
-            
-            // A module is validated if either:
-            // 1. Its average is >= 10, or
-            // 2. Its average is exactly 9 AND:
-            //    a) No other module has average < 9 AND
-            //    b) No subject in any module has average < 5
-            const isModuleValidated = moduleAverage >= 10 || 
-                                    (moduleAverage >= 9 && 
-                                    !hasModuleUnderNine && 
-                                    !hasAnySubjectUnderFive);
-
-            const moduleStatus = isModuleValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
-
-            // Update subject displays
-            moduleInfo.subjects.forEach(subjectInfo => {
-                const subjectElement = subjectInfo.element;
-                if (subjectElement) {
-                    const subjectAverage = subjectInfo.data.average;
-                    // A subject is validated if either:
-                    // 1. Its own average is >= 10, or
-                    // 2. The module is validated (compensation) AND the subject average is >= 5
-                    const status = (subjectAverage >= 10) || (isModuleValidated && subjectAverage >= 5) ? 'VALIDÉ' : 'RATTRAPAGE';
-                    
-                    const resultDiv = subjectElement.querySelector('.subject-result');
-                    if (resultDiv) {
-                        resultDiv.innerHTML = `
-                            <div class="subject-status ${status === 'VALIDÉ' ? 'success' : 'failure'}">
-                                ${status}: ${subjectAverage.toFixed(2)}
-                            </div>
-                        `;
-                    }
-                }
-            });
-
-            // Update module display
-            const moduleResult = moduleInfo.element.querySelector('.module-result');
-            if (moduleResult) {
-                moduleResult.innerHTML = `
-                    <div class="module-status ${isModuleValidated ? 'success' : 'failure'}">
-                        ${moduleStatus}: ${moduleAverage.toFixed(2)}
-                    </div>
-                `;
-            }
-
-            // Store module data
-            module.average = moduleAverage;
-            module.status = moduleStatus;
-            module.calculated = true;
-        });
-
-        // Calculate and display overall average
-        if (moduleData.length > 0) {
-            let totalWeightedModuleScores = 0;
-            let totalModuleCredits = 0;
-
-            moduleData.forEach(moduleInfo => {
-                // Calculate total credits (coefficients) for this module
-                const moduleCredits = moduleInfo.subjects.reduce((sum, subject) => 
-                    sum + (subject.data.coefficient || 1), 0);
-                
-                // Add to weighted sum (module average × module total credits)
-                totalWeightedModuleScores += moduleInfo.average * moduleCredits;
-                totalModuleCredits += moduleCredits;
-            });
-
-            // Calculate overall average: sum(module_average × module_credits) / total_credits
-            const overallAverage = totalModuleCredits > 0 ? 
-                totalWeightedModuleScores / totalModuleCredits : 0;
-            
-            // Create or update overall average display
-            const generalAverageContainer = document.getElementById('general-average-container');
-            let overallAverageDiv = document.getElementById('overallAverage');
-            
-            if (!overallAverageDiv) {
-                overallAverageDiv = document.createElement('div');
-                overallAverageDiv.id = 'overallAverage';
-                generalAverageContainer.appendChild(overallAverageDiv);
-            }
-            
-            overallAverageDiv.className = `general-average ${overallAverage >= 10 ? 'success' : 'failure'}`;
-            overallAverageDiv.innerHTML = `
-                <div class="average-value">Moyenne Générale: ${overallAverage.toFixed(2)}</div>
-                <div class="average-message ${overallAverage >= 10 ? 'success' : 'failure'}">
-                    ${overallAverage >= 10 ? '🎉 Congrats 🎉' : '😬 Oops 😬'}
-                </div>
-            `;
-        }
-
-        // Get general average from the website
-        const overallAverageElement = document.getElementById('overallAverage');
-        if (overallAverageElement) {
-            const generalAverage = parseFloat(overallAverageElement.textContent.match(/[\d.]+/)[0]);
-            const isPassingGeneral = generalAverage >= 10;
-
-            // Draw decorative line
-            doc.setDrawColor(52, 152, 219);
-            doc.setLineWidth(0.5);
-            doc.line(margin, y - 5, doc.internal.pageSize.width - margin, y - 5);
-
-            // Create elegant box for general average
-            doc.setFillColor(236, 240, 241);
-            doc.rect(margin - 2, y, colWidths.reduce((a, b) => a + b, 0) + 4, 20, 'F');
-            
-            // Add general average text with appropriate color
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(14);
-            doc.setTextColor(isPassingGeneral ? 46 : 198, isPassingGeneral ? 125 : 40, isPassingGeneral ? 50 : 40);
-            doc.text(`Moyenne Générale: ${generalAverage.toFixed(2)}`, doc.internal.pageSize.width / 2, y + 13, { align: 'center' });
-        }
-
-        // Add signature line at the bottom
-        doc.setFont('helvetica', 'italic');
-        doc.setFontSize(10);
-        doc.setTextColor(128, 128, 128);
-        const signature = "Par CHEIKH BRAHIM ( MS )";
-        doc.text(signature, doc.internal.pageSize.width - margin - doc.getTextWidth(signature), doc.internal.pageSize.height - 20);
-
-        // Add page numbers
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-            doc.setPage(i);
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(8);
-            doc.setTextColor(128, 128, 128);
-            doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
-        }
-
-        doc.save('releve_notes.pdf');
-    }
-
-    parseGrade(value) {
-        // Replace comma with dot for decimal numbers
-        value = value.toString().replace(',', '.');
-        // Convert to number and check if it's valid
-        const grade = parseFloat(value);
-        return !isNaN(grade) ? grade : 0;
-    }
-
-    calculateRattrapageNeeded(exam, devoir) {
-        // TD (devoir) is 40% and Exam is 60% of final grade
-        // To pass, need final grade of 10
-        // In rattrapage, only the exam grade changes
-        // 10 = (newExam * 0.6) + (devoir * 0.4)
-        // Solve for newExam:
-        // newExam = (10 - (devoir * 0.4)) / 0.6
-        const neededGrade = (10 - (devoir * 0.4)) / 0.6;
-        return Math.ceil(neededGrade * 100) / 100; // Round up to 2 decimal places
-    }
-
-    updateSubjectDisplay(subjectElement, exam, devoir, coefficient) {
-        if (subjectElement) {
-            // Calculate subject average
-            const subjectAverage = (exam * 0.6 + devoir * 0.4);
-            
-            const resultDiv = subjectElement.querySelector('.subject-result');
-            if (resultDiv) {
-                resultDiv.innerHTML = `
-                    <div class="subject-status ${subjectAverage >= 10 ? 'success' : 'failure'}">
-                        Moyenne: ${subjectAverage.toFixed(2)}/20
-                    </div>
-                `;
-            }
-        }
-    }
-
-    generatePDF() {
-        try {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const margin = 15;
-            let y = 25;
-
-            // Add header with gradient-like effect
-            doc.setFillColor(41, 128, 185);
-            doc.rect(0, 0, doc.internal.pageSize.width, 40, 'F');
-            doc.setFillColor(52, 152, 219);
-            doc.rect(0, 0, doc.internal.pageSize.width, 35, 'F');
-
-            // Add title
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(24);
-            doc.setTextColor(255, 255, 255);
-            doc.text('Relevé de Notes', doc.internal.pageSize.width / 2, 25, { align: 'center' });
-
-            // Reset text color and move below header
-            doc.setTextColor(0, 0, 0);
-            y = 60;
-
-            // Get student info
-            const studentName = document.getElementById('studentName').value;
-            const studentId = document.getElementById('studentId').value;
-
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'normal');
-            if (studentName) {
-                doc.text(`Nom et Prénom: ${studentName}`, margin, y);
-                y += 10;
-            }
-            if (studentId) {
-                doc.text(`N° d'Inscription: ${studentId}`, margin, y);
-                y += 10;
-            }
-
-            // Add date
-            const currentDate = new Date().toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            doc.text(`Date: ${currentDate}`, margin, y);
-            y += 20;
-
-            // Headers and content setup
-            const colWidths = [50, 25, 25, 20, 30, 35];
-            const headers = ['Matière', 'Devoir', 'Examen', 'Crédit', 'Moyenne', 'Status'];
-            
-            // Process each module
-            this.modules.forEach((module, moduleIndex) => {
-                // Check if we need a new page
-                if (y > 250) {
-                    doc.addPage();
-                    y = 25;
-                }
-
-                // Get module element
-                const moduleElement = document.getElementById(`module${moduleIndex}`);
-                if (!moduleElement) return;
-
-                // Get unit color based on module index
-                const getUnitColor = (index) => {
-                    const colors = {
-                        0: { r: 63, g: 81, b: 181 },   // Indigo
-                        1: { r: 0, g: 121, b: 107 },   // Teal
-                        2: { r: 194, g: 24, b: 91 },   // Pink
-                        3: { r: 123, g: 31, b: 162 },  // Purple
-                        4: { r: 216, g: 67, b: 21 },   // Deep Orange
-                        5: { r: 46, g: 125, b: 50 },   // Green
-                        6: { r: 21, g: 101, b: 192 },  // Blue
-                        7: { r: 74, g: 20, b: 140 }    // Deep Purple
-                    };
-                    return colors[index % 8] || colors[0];
-                };
-
-                const unitColor = getUnitColor(moduleIndex);
-
-                // Module title with background using unit color
-                doc.setFillColor(unitColor.r, unitColor.g, unitColor.b);
-                doc.rect(margin - 5, y - 5, doc.internal.pageSize.width - 2 * (margin - 5), 12, 'F');
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(14);
-                doc.setTextColor(255, 255, 255);
-                
-                // Get module name from input
-                const moduleNameInput = moduleElement.querySelector('.module-name');
-                const moduleName = moduleNameInput ? moduleNameInput.value : `Module ${moduleIndex + 1}`;
-                doc.text(moduleName, margin, y + 3);
-                y += 20;
-
-                // Table headers with unit color styling
-                doc.setFillColor(unitColor.r, unitColor.g, unitColor.b, 0.8);  // Slightly transparent
-                doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
-                
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(10);
-                doc.setTextColor(255, 255, 255);
-                let x = margin;
-                headers.forEach((header, i) => {
-                    doc.text(header, x, y + 2);
-                    x += colWidths[i];
-                });
-                doc.setTextColor(0, 0, 0);
-                y += 12;
-
-                // Get all subjects from the module element
-                const subjects = moduleElement.querySelectorAll('.subject');
-                subjects.forEach((subject, idx) => {
-                    // Get subject data from the actual form fields
-                    const name = subject.querySelector('.subject-name').value;
-                    const devoir = parseFloat(subject.querySelector('.devoir').value) || 0;
-                    const exam = parseFloat(subject.querySelector('.exam').value) || 0;
-                    const coefficient = parseFloat(subject.querySelector('.coefficient').value) || 1;
-                    const average = (exam * 0.6 + devoir * 0.4).toFixed(2);
-                    
-                    // Get the actual status from the website
-                    const resultDiv = subject.querySelector('.subject-result');
-                    const statusDiv = resultDiv ? resultDiv.querySelector('.subject-status') : null;
-                    const status = statusDiv ? 
-                        (statusDiv.classList.contains('success') ? 'VALIDÉ' : 'RATTRAPAGE') : 
-                        (average >= 10 ? 'VALIDÉ' : 'RATTRAPAGE');
-
-                    // Alternate row colors
-                    if (idx % 2 === 0) {
-                        doc.setFillColor(245, 247, 250);
-                        doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 10, 'F');
-                    }
-
-                    // Draw each cell
-                    x = margin;
-                    doc.setFont('helvetica', 'normal');
-                    [name, devoir.toString(), exam.toString(), coefficient.toString(), average, status]
-                        .forEach((value, i) => {
-                            if (i === 5) {
-                                doc.setTextColor(status === 'VALIDÉ' ? 46 : 198, 
-                                               status === 'VALIDÉ' ? 125 : 40, 
-                                               status === 'VALIDÉ' ? 50 : 40);
-                                doc.setFont('helvetica', 'bold');
-                            }
-                            doc.text(value || '-', x, y + 2);
-                            if (i === 5) {
-                                doc.setTextColor(0, 0, 0);
-                                doc.setFont('helvetica', 'normal');
-                            }
-                            x += colWidths[i];
-                        });
-                    y += 10;
-                });
-
-                // Get module result from the website
-                const moduleResult = moduleElement.querySelector('.module-result');
-                const moduleStatus = moduleResult ? moduleResult.querySelector('.module-status') : null;
-                const isValidated = moduleStatus ? moduleStatus.classList.contains('success') : false;
-                
-                // Get the exact module average from the website display
-                let moduleAverage = '';
-                if (moduleStatus) {
-                    const statusText = moduleStatus.textContent;
-                    const match = statusText.match(/:\s*([\d.]+)/);
-                    if (match) {
-                        moduleAverage = match[1];
-                    }
-                }
-                
-                const moduleStatusText = isValidated ? 'MODULE VALIDÉ' : 'MODULE NON VALIDÉ';
-
-                // Draw module result box
-                y += 5;
-                doc.setFillColor(236, 240, 241);
-                doc.rect(margin - 2, y - 5, colWidths.reduce((a, b) => a + b, 0) + 4, 15, 'F');
-                
-                // Module status text
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(isValidated ? 46 : 198, isValidated ? 125 : 40, isValidated ? 50 : 40);
-                doc.text(`${moduleStatusText}: ${moduleAverage}`, margin, y + 4);
-                doc.setTextColor(0, 0, 0);
-
-                y += 25;
-            });
-
-            // Get general average from the website
-            const overallAverageElement = document.getElementById('overallAverage');
-            if (overallAverageElement) {
-                const generalAverage = parseFloat(overallAverageElement.textContent.match(/[\d.]+/)[0]);
-                const isPassingGeneral = generalAverage >= 10;
-
-                // Draw decorative line
-                doc.setDrawColor(52, 152, 219);
-                doc.setLineWidth(0.5);
-                doc.line(margin, y - 5, doc.internal.pageSize.width - margin, y - 5);
-
-                // Create elegant box for general average
-                doc.setFillColor(236, 240, 241);
-                doc.rect(margin - 2, y, colWidths.reduce((a, b) => a + b, 0) + 4, 20, 'F');
-                
-                // Add general average text with appropriate color
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(14);
-                doc.setTextColor(isPassingGeneral ? 46 : 198, isPassingGeneral ? 125 : 40, isPassingGeneral ? 50 : 40);
-                doc.text(`Moyenne Générale: ${generalAverage.toFixed(2)}`, doc.internal.pageSize.width / 2, y + 13, { align: 'center' });
-            }
-
-            // Add signature line at the bottom
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(10);
-            doc.setTextColor(128, 128, 128);
-            const signature = "Par CHEIKH BRAHIM ( MS )";
-            doc.text(signature, doc.internal.pageSize.width - margin - doc.getTextWidth(signature), doc.internal.pageSize.height - 20);
-
-            // Add page numbers
-            const pageCount = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                doc.setFont('helvetica', 'italic');
-                doc.setFontSize(8);
-                doc.setTextColor(128, 128, 128);
-                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
-            }
-
-            doc.save('releve_notes.pdf');
-        } catch (error) {
-            console.error('Error generating PDF:', error);
-            alert('Error generating PDF. Please try again.');
-        }
-    }
-
-    calculateOverallAverage() {
-        const totalModules = this.modules.length;
-        if (totalModules === 0) return 0;
-        
-        let totalWeightedScore = 0;
-        let totalCoefficients = 0;
-
-        this.modules.forEach(module => {
-            const moduleAverage = module.calculateAverage();
-            totalWeightedScore += moduleAverage * module.subjects.reduce((sum, subject) => sum + subject.coefficient, 0);
-            totalCoefficients += module.subjects.reduce((sum, subject) => sum + subject.coefficient, 0);
-        });
-
-        return Number((totalWeightedScore / totalCoefficients).toFixed(2));
-    }
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-// Set initial exam dates
-const s1s3ExamDate = new Date('2025-02-10T00:00:00');
-const s5ExamDate = new Date('2025-02-17T00:00:00');
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
 
-// Countdown functionality
-function updateCountdown() {
-    const now = new Date();
-    
-    // Update S1/S3 countdown
-    const s1s3TimeLeft = s1s3ExamDate - now;
-    const s1s3Box = document.querySelector('.countdown-box.s1s3');
-    if (s1s3Box) {
-        if (s1s3TimeLeft > 0) {
-            const days = Math.floor(s1s3TimeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((s1s3TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((s1s3TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            
-            const spans = s1s3Box.querySelectorAll('.time-block span');
-            if (spans.length === 3) {
-                spans[0].textContent = days;
-                spans[1].textContent = hours;
-                spans[2].textContent = minutes;
-            }
-        } else {
-            s1s3Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
-        }
+.student-info, .modules-container, .results-section {
+    background-color: var(--card-background);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.student-info:hover, .modules-container:hover, .results-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px var(--shadow-color);
+}
+
+.subject-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.subject-inputs input[type="text"],
+.subject-inputs input[type="number"],
+.module-name {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-light);
+    box-sizing: border-box;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
+}
+
+.subject {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subject input {
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-light);
+    color: var(--text-color);
+}
+
+.subject-result {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.subject-average {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.module-result {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--background-light);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.module-average, .module-status, .subject-status {
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.failure {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: 44px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #45a049 0%, #388E3C 100%);
+}
+
+.btn-secondary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #45a049;
+}
+
+.summary {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 25px;
+    transition: transform 0.3s ease;
+}
+
+.summary:hover {
+    transform: translateY(-3px);
+}
+
+.summary p {
+    font-size: 18px;
+    margin: 12px 0;
+    color: var(--primary-dark);
+    font-weight: 500;
+}
+
+#generatePDF {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    margin-top: 25px;
+}
+
+#generatePDF:hover {
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+.delete-module,
+.delete-subject {
+    color: #e74c3c;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-left: 10px;
+}
+
+.delete-module:hover,
+.delete-subject:hover {
+    color: #c0392b;
+}
+
+.module-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.subject {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subject:hover {
+    background-color: var(--background-light);
+}
+
+.modules-container {
+    text-align: center;
+}
+
+.modules-container .btn {
+    margin: 10px 5px;
+}
+
+.results-summary {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.overall-average {
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+footer {
+    background-color: var(--background-light);
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+footer p {
+    color: var(--text-color);
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+    height: 44px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.student-info input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    height: 44px;
+}
+
+.student-info input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile styles - keeping it simple */
+@media screen and (max-width: 768px) {
+    .subject-inputs {
+        display: block;
+        width: 100%;
     }
     
-    // Update S5 countdown
-    const s5TimeLeft = s5ExamDate - now;
-    const s5Box = document.querySelector('.countdown-box.s5');
-    if (s5Box) {
-        if (s5TimeLeft > 0) {
-            const days = Math.floor(s5TimeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((s5TimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((s5TimeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            
-            const spans = s5Box.querySelectorAll('.time-block span');
-            if (spans.length === 3) {
-                spans[0].textContent = days;
-                spans[1].textContent = hours;
-                spans[2].textContent = minutes;
-            }
-        } else {
-            s5Box.querySelector('.countdown').innerHTML = '<div class="exam-started">Examens en cours</div>';
-        }
+    .subject-inputs input,
+    .module-name,
+    .student-info input {
+        display: block;
+        width: 100%;
+        height: 35px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .subject {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .delete-subject {
+        width: 35px;
+        height: 35px;
     }
 }
 
-// Dark mode functionality
-function initializeDarkMode() {
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    if (!darkModeToggle) return;
-
-    // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    darkModeToggle.innerHTML = savedTheme === 'dark' ? 
-        '<i class="fas fa-sun"></i>' : 
-        '<i class="fas fa-moon"></i>';
-
-    // Toggle theme
-    darkModeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        darkModeToggle.innerHTML = newTheme === 'dark' ? 
-            '<i class="fas fa-sun"></i>' : 
-            '<i class="fas fa-moon"></i>';
-    });
+/* Desktop styles */
+@media screen and (min-width: 769px) {
+    .subject-inputs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
 }
 
-// Initialize everything when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Start the countdown timer
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+.modules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modules-container .btn {
+    margin: 5px 0;
+}
+
+.module-result {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    background-color: var(--background-light);
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subject {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.subject-inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subject-inputs input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: var(--background-light);
+}
+
+.delete-subject {
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+/* Downloads Section Styles */
+.downloads-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: var(--card-background);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.downloads-section h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.downloads-section h2 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.downloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.download-card {
+    background: var(--background-light);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.download-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.download-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.download-icon i {
+    font-size: 24px;
+    color: white;
+}
+
+.download-info {
+    flex: 1;
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+    background: #45a049;
+}
+
+.download-button i {
+    font-size: 1.1em;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .downloads-grid {
+        grid-template-columns: 1fr;
+    }
     
-    // Initialize dark mode
-    initializeDarkMode();
+    .download-card {
+        padding: 15px;
+    }
+}
+
+.module-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.module-name {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: var(--background-light);
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 8px;
+    }
+
+    .subject {
+        padding: 10px;
+        margin-bottom: 8px;
+    }
+
+    .subject-inputs {
+        gap: 6px;
+    }
+
+    .subject-inputs input {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .btn {
+        height: 36px;
+        padding: 6px 12px;
+        font-size: 14px;
+        margin: 4px 0;
+    }
+
+    .delete-subject {
+        width: 32px;
+        height: 32px;
+    }
+
+    .module-name {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    .input-group input {
+        height: 36px;
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    h1 {
+        font-size: 1.4em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    .subtitle {
+        font-size: 0.9em;
+    }
+}
+
+/* Ensure proper spacing between modules */
+.module-entry {
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+/* Fix input placeholder text color */
+input::placeholder {
+    color: #999;
+    opacity: 1;
+}
+
+/* Simple, consistent input styling for all devices */
+.subject-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.subject-inputs input,
+.module-name,
+.student-info input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: var(--background-light);
+    box-sizing: border-box;
+}
+
+.subject {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.delete-subject {
+    width: 40px;
+    height: 40px;
+    margin-top: 10px;
+    align-self: flex-end;
+}
+
+/* Simple responsive layout */
+@media screen and (min-width: 768px) {
+    .subject-inputs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+}
+
+/* Desktop view */
+@media screen and (min-width: 768px) {
+    .subject-inputs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+}
+
+.rattrapage-info {
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #fff3e0;
+    border-left: 3px solid #ff9800;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #e65100;
+}
+
+.rattrapage-info strong {
+    color: #f57c00;
+    font-weight: 600;
+}
+
+.subject-result {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+}
+
+.subject-average,
+.subject-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.subject-average.success,
+.subject-status.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.subject-average.failure,
+.subject-status.failure {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.general-average {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px auto;
+    display: inline-block;
+    font-size: 1.2em;
+}
+
+#general-average-container {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.failure {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+#general-average-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.general-average {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 8px;
+    background-color: var(--card-background);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 10px 0;
+}
+
+.general-average.success {
+    border-left: 4px solid #2e7d32;
+}
+
+.general-average.failure {
+    border-left: 4px solid #c62828;
+}
+
+.average-label {
+    font-size: 1.1em;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.average-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 5px 0;
+}
+
+.credits-info {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin-top: 5px;
+}
+
+.general-average {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.average-message {
+    font-size: 1.8em;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.average-message.success {
+    color: var(--success-color);
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+.average-message.failure {
+    color: #c62828;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+#general-average-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.general-average {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0;
+    background: var(--card-background);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.average-value {
+    white-space: nowrap;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.average-message {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 1.4em;
+}
+
+@media (max-width: 480px) {
+    .general-average {
+        padding: 15px;
+        font-size: 0.9em;
+    }
     
-    // Initialize the academic manager
-    const manager = new AcademicManager();
-    manager.initializeEventListeners();
-})
+    .average-message {
+        font-size: 1.2em;
+    }
+}
+
+.module-card {
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 5px solid var(--primary-color); /* Default border color */
+}
+
+.module-card:nth-of-type(1) { border-left-color: var(--unit1-color); }
+.module-card:nth-of-type(2) { border-left-color: var(--unit2-color); }
+.module-card:nth-of-type(3) { border-left-color: var(--unit3-color); }
+.module-card:nth-of-type(4) { border-left-color: var(--unit4-color); }
+.module-card:nth-of-type(5) { border-left-color: var(--unit5-color); }
+.module-card:nth-of-type(6) { border-left-color: var(--unit6-color); }
+.module-card:nth-of-type(7) { border-left-color: var(--unit7-color); }
+.module-card:nth-of-type(8) { border-left-color: var(--unit8-color); }
+
+.module-card h3 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.module-card:nth-of-type(1) h3 { color: var(--unit1-color); }
+.module-card:nth-of-type(2) h3 { color: var(--unit2-color); }
+.module-card:nth-of-type(3) h3 { color: var(--unit3-color); }
+.module-card:nth-of-type(4) h3 { color: var(--unit4-color); }
+.module-card:nth-of-type(5) h3 { color: var(--unit5-color); }
+.module-card:nth-of-type(6) h3 { color: var(--unit6-color); }
+.module-card:nth-of-type(7) h3 { color: var(--unit7-color); }
+.module-card:nth-of-type(8) h3 { color: var(--unit8-color); }
+
+.module {
+    background-color: var(--card-background);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 5px solid var(--primary-color); /* Default border color */
+}
+
+.module:nth-of-type(1) { border-left-color: #3F51B5; }
+.module:nth-of-type(2) { border-left-color: #00796B; }
+.module:nth-of-type(3) { border-left-color: #C2185B; }
+.module:nth-of-type(4) { border-left-color: #7B1FA2; }
+.module:nth-of-type(5) { border-left-color: #D84315; }
+.module:nth-of-type(6) { border-left-color: #2E7D32; }
+.module:nth-of-type(7) { border-left-color: #1565C0; }
+.module:nth-of-type(8) { border-left-color: #4A148C; }
+
+.module:nth-of-type(1) .module-name { color: #3F51B5; }
+.module:nth-of-type(2) .module-name { color: #00796B; }
+.module:nth-of-type(3) .module-name { color: #C2185B; }
+.module:nth-of-type(4) .module-name { color: #7B1FA2; }
+.module:nth-of-type(5) .module-name { color: #D84315; }
+.module:nth-of-type(6) .module-name { color: #2E7D32; }
+.module:nth-of-type(7) .module-name { color: #1565C0; }
+.module:nth-of-type(8) .module-name { color: #4A148C; }
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.module-name {
+    flex: 1;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    width: 100%;
+    margin-right: 15px;
+}
+
+[data-theme="dark"] .module:nth-of-type(1) { border-left-color: #5C6BC0; }
+[data-theme="dark"] .module:nth-of-type(2) { border-left-color: #26A69A; }
+[data-theme="dark"] .module:nth-of-type(3) { border-left-color: #E91E63; }
+[data-theme="dark"] .module:nth-of-type(4) { border-left-color: #9C27B0; }
+[data-theme="dark"] .module:nth-of-type(5) { border-left-color: #FF5722; }
+[data-theme="dark"] .module:nth-of-type(6) { border-left-color: #43A047; }
+[data-theme="dark"] .module:nth-of-type(7) { border-left-color: #1E88E5; }
+[data-theme="dark"] .module:nth-of-type(8) { border-left-color: #6A1B9A; }
+
+[data-theme="dark"] .module:nth-of-type(1) .module-name { color: #5C6BC0; }
+[data-theme="dark"] .module:nth-of-type(2) .module-name { color: #26A69A; }
+[data-theme="dark"] .module:nth-of-type(3) .module-name { color: #E91E63; }
+[data-theme="dark"] .module:nth-of-type(4) .module-name { color: #9C27B0; }
+[data-theme="dark"] .module:nth-of-type(5) .module-name { color: #FF5722; }
+[data-theme="dark"] .module:nth-of-type(6) .module-name { color: #43A047; }
+[data-theme="dark"] .module:nth-of-type(7) .module-name { color: #1E88E5; }
+[data-theme="dark"] .module:nth-of-type(8) .module-name { color: #6A1B9A; }
+
+.exam-countdown-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+    background-color: var(--background-light);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.countdown-box {
+    flex: 1;
+    text-align: center;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.countdown-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-box h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.countdown-box .countdown {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.countdown-box .time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.countdown-box .time-block span {
+    font-size: 2.5em;
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.countdown-box .time-block label {
+    font-size: 0.9em;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.countdown-box .exam-started {
+    color: var(--accent-color);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@media screen and (max-width: 768px) {
+    .exam-countdown-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .countdown-box .time-block span {
+        font-size: 2em;
+    }
+
+    .countdown-box .time-block label {
+        font-size: 0.8em;
+    }
+}
+
+/* Authentication Styles */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 20px;
+}
+
+.auth-box {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-box h2 {
+    text-align: center;
+    color: #1e3c72;
+    margin-bottom: 30px;
+}
+
+.auth-box h2 i {
+    margin-right: 10px;
+}
+
+.auth-form .form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.auth-form label i {
+    margin-right: 5px;
+    color: #1e3c72;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.auth-form input:focus {
+    border-color: #1e3c72;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.2);
+}
+
+.auth-form .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #1e3c72;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.auth-form .btn-primary:hover {
+    background: #2a5298;
+}
+
+.auth-form .btn-primary i {
+    margin-right: 8px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-links a {
+    color: #1e3c72;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.message.error {
+    background: #ffe6e6;
+    color: #d63031;
+    border: 1px solid #fab1a0;
+}
+
+.message.success {
+    background: #e6ffe6;
+    color: #00b894;
+    border: 1px solid #55efc4;
+}
+
+.message.info {
+    background: #e6f2ff;
+    color: #0984e3;
+    border: 1px solid #74b9ff;
+}
+
+/* User Menu Styles */
+.user-menu {
+    position: fixed;
+    top: 20px;
+    right: 70px;
+    z-index: 1000;
+}
+
+.user-menu .dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu .dropdown-toggle {
+    background: none;
+    border: none;
+    color: #2196F3;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 24px;
+}
+
+.user-menu .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    padding: 10px 0;
+}
+
+.user-menu .dropdown-content a {
+    color: #333;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: block;
+}
+
+.user-menu .dropdown-content a:hover {
+    background-color: #f5f5f5;
+}
+
+.user-menu .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.user-menu .dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.user-menu .dropdown-toggle {
+    background: none;
+    border: none;
+    color: #2196F3;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 24px;
+}
+
+.contact-section {
+    background-color: var(--background-light);
+    padding: 40px 0;
+    margin-top: 30px;
+}
+
+.contact-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.contact-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-size: 2em;
+    font-weight: var(--font-weight-bold);
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.social-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+}
+
+.social-icon i {
+    font-size: 1.8em;
+    color: var(--text-color);
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 480px) {
+    .contact-section h2 {
+        font-size: 1.5em;
+    }
+
+    .social-links {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 5px;
+    }
+
+    .social-icon i {
+        font-size: 1.5em;
+    }
+}
+
+.copyright {
+    display: none;
+}
+
+/* Global Responsive Adjustments */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+@media screen and (max-width: 1200px) {
+    .container {
+        padding: 15px;
+        width: 95%;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .title h1 {
+        font-size: 1.8em;
+    }
+
+    .exam-countdown-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .countdown-box {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .countdown-box .time-block {
+        min-width: 60px;
+    }
+
+    .countdown-box .time-block span {
+        font-size: 1.8em;
+    }
+
+    .countdown-box .time-block label {
+        font-size: 0.7em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 12px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .title h1 {
+        font-size: 1.5em;
+    }
+
+    .social-links {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 5px;
+    }
+
+    .footer {
+        padding: 15px;
+        font-size: 0.8em;
+    }
+}
+
+/* Ensure touch targets are large enough */
+@media (pointer: coarse) {
+    .social-icon, 
+    .countdown-box,
+    .theme-toggle,
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Prevent text overflow */
+* {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 768px) {
+    .title h1 i {
+        font-size: 1.2em; /* Larger graduation hat icon */
+    }
+
+    .theme-toggle {
+        font-size: 1.5em; /* Larger dark mode toggle icon */
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .theme-toggle i {
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .title h1 i {
+        font-size: 1.5em; /* Even larger on smaller screens */
+    }
+
+    .theme-toggle {
+        font-size: 1.8em; /* Larger dark mode toggle icon on small screens */
+        width: 60px;
+        height: 60px;
+    }
+}
