@@ -920,4 +920,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the academic manager
     const manager = new AcademicManager();
     manager.initializeEventListeners();
-});
+})
