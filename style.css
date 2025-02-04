@@ -157,7 +157,7 @@ header .subtitle {
     }
 
     .title h1 i {
-        font-size: 0.9em;
+        font-size: 1.2em;
     }
 }
 
@@ -167,7 +167,7 @@ header .subtitle {
     }
 
     .title h1 i {
-        font-size: 0.8em;
+        font-size: 1.5em;
     }
 }
 
@@ -1573,4 +1573,37 @@ html, body {
 * {
     word-wrap: break-word;
     overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 768px) {
+    .title h1 i {
+        font-size: 1.2em; /* Larger graduation hat icon */
+    }
+
+    .theme-toggle {
+        font-size: 1.5em; /* Larger dark mode toggle icon */
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .theme-toggle i {
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .title h1 i {
+        font-size: 1.5em; /* Even larger on smaller screens */
+    }
+
+    .theme-toggle {
+        font-size: 1.8em; /* Larger dark mode toggle icon on small screens */
+        width: 60px;
+        height: 60px;
+    }
 }
