@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Système de Gestion des Notes LMD - Calculez vos moyennes facilement">
+    <meta name="theme-color" content="#2196F3">
+    <title>Calculateur de Moyenne LMD</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="title">
+                    <h1><i class="fas fa-graduation-cap"></i> MS</h1>
+                </div>
+                <button id="darkModeToggle" class="theme-toggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <p class="subtitle">Système de Gestion des Notes</p>
+                <div class="exam-countdown-container">
+                    <div class="countdown-box s1s3">
+                        <h3>S1 & S3 Exams</h3>
+                        <div class="countdown" id="s1s3Countdown">
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Jours</label>
+                            </div>
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Heures</label>
+                            </div>
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Minutes</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="countdown-box s5">
+                        <h3>S5 Exams</h3>
+                        <div class="countdown" id="s5Countdown">
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Jours</label>
+                            </div>
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Heures</label>
+                            </div>
+                            <div class="time-block">
+                                <span>--</span>
+                                <label>Minutes</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="downloads-section">
+                <h2><i class="fas fa-download"></i> Documents Importants</h2>
+                <div class="downloads-grid">
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Calendrier Annuel</h3>
+                            <a href="pdfs/calendrier_annuel.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi du temps</h3>
+                            <a href="pdfs/emploi_du_temps.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi Devoir</h3>
+                            <a href="pdfs/emploi_devoir.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="download-info">
+                            <h3>Emploi Exam</h3>
+                            <a href="pdfs/emploi_exam.pdf" class="download-button" download>
+                                <i class="fas fa-file-pdf"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="student-info">
+                <h2><i class="fas fa-user-graduate"></i> Information de l'Étudiant</h2>
+                <div class="input-group">
+                    <label for="studentName">Nom et Prénom:</label>
+                    <input type="text" id="studentName" placeholder="Entrez le nom de l'étudiant" autocomplete="name">
+                </div>
+                <div class="input-group">
+                    <label for="studentId">Numéro d'Inscription:</label>
+                    <input type="text" id="studentId" placeholder="Entrez le numéro d'inscription">
+                </div>
+            </div>
+
+            <div class="modules-container">
+                <div id="modulesSection">
+                    <!-- Modules will be added here dynamically -->
+                </div>
+                <div id="general-average-container">
+                    <!-- General average will be displayed here -->
+                </div>
+                <button id="addModule" class="btn" aria-label="Ajouter un module">
+                    <i class="fas fa-plus"></i> Ajouter un Module
+                </button>
+                <button id="calculateAll" class="btn btn-primary" aria-label="Calculer toutes les notes">
+                    <i class="fas fa-calculator"></i> Calculer les Notes
+                </button>
+                <button id="generatePDF" class="btn btn-secondary" aria-label="Générer le PDF">
+                    <i class="fas fa-file-pdf"></i> Générer PDF
+                </button>
+            </div>
+
+            <div class="results-summary" id="resultsSummary" style="display: none;">
+                <!-- Results will be displayed here -->
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; développer par cheikh brahim Ahmedou (MS). Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
