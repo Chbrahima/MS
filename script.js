@@ -834,7 +834,7 @@ class AcademicManager {
 }
 
 // Set initial exam dates
-const s1s3ExamDate = new Date('2025-02-10T00:00:00');
+const s1s3ExamDate = new Date('2025-04-21T00:00:00');
 const s5ExamDate = new Date('2025-02-17T00:00:00');
 
 // Countdown functionality
